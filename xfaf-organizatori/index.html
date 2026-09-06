@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>xFAF: Organizer</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2314182C'/%3E%3Ctext x='32' y='47' font-size='42' text-anchor='middle' fill='%23CE3327'%3E%E2%99%A0%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..900&family=Archivo:wght@400..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --stock: #F2EDE1;
+    --stock-2: #E6DECA;
+    --ink: #14182C;
+    --ink-2: #1D2340;
+    --ink-3: #0D1020;
+    --vermilion: #CE3327;
+    --vermilion-d: #A62A21;
+    --brass: #B08F4F;
+    --brass-lt: #D8B876;
+    --on-ink-dim: #B9B2A0;
+    --on-stock-dim: #5C5847;
+    --serif: 'Bodoni Moda', 'Didot', Georgia, serif;
+    --sans: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--stock);
+    font-family: var(--sans);
+    font-optical-sizing: auto;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  h1, h2 { font-family: var(--serif); margin: 0; line-height: 1.1; }
+  a { color: var(--brass-lt); }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 2px solid var(--brass-lt); outline-offset: 2px; }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 24px;
+    border-bottom: 1px solid rgba(176,143,79,0.3);
+  }
+  .brand {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 1.05rem;
+  }
+  .brand i { font-style: normal; color: var(--vermilion); }
+  .who { display: flex; align-items: center; gap: 14px; font-size: 0.85rem; color: var(--on-ink-dim); }
+  .btn {
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.85rem;
+    background: none;
+    color: var(--brass-lt);
+    border: 1px solid var(--brass);
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--brass); color: var(--ink); }
+  .btn.primary { background: var(--vermilion); color: var(--stock); border-color: var(--vermilion); }
+  .btn.primary:hover { background: var(--vermilion-d); border-color: var(--vermilion-d); }
+  .btn:disabled { opacity: 0.55; cursor: default; }
+
+  /* ---------- LOGIN ---------- */
+  .login-wrap {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 360px;
+    background: var(--stock);
+    color: var(--ink);
+    padding: clamp(28px, 6vw, 40px);
+    border: 1px solid var(--brass);
+  }
+  .login-card h1 { font-size: 1.6rem; margin-bottom: 6px; }
+  .login-card p.lede { color: var(--on-stock-dim); font-size: 0.9rem; margin: 0 0 22px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
+  .field input {
+    width: 100%;
+    font: inherit;
+    font-size: 1rem;
+    padding: 10px 12px;
+    border: 1px solid rgba(20,24,44,0.3);
+    background: #fff;
+    color: var(--ink);
+  }
+  .field input:focus { border-color: var(--vermilion); outline: 2px solid var(--vermilion); outline-offset: 1px; }
+  .login-card .btn.primary { width: 100%; margin-top: 6px; }
+  .login-error {
+    min-height: 1.3em;
+    margin: 12px 0 0;
+    font-size: 0.85rem;
+    color: var(--vermilion-d);
+    text-align: center;
+  }
+
+  /* ---------- DASHBOARD ---------- */
+  .dash { padding: 24px; max-width: 1100px; margin: 0 auto; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 22px; border-bottom: 1px solid rgba(176,143,79,0.3); }
+  .tab {
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.9rem;
+    background: none;
+    border: 0;
+    color: var(--on-ink-dim);
+    padding: 10px 4px;
+    margin-right: 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  .tab[aria-selected="true"] { color: var(--stock); border-bottom-color: var(--vermilion); }
+
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .panel-head h2 { font-size: 1.3rem; }
+  .count { font-size: 0.85rem; color: var(--on-ink-dim); }
+  .search {
+    font: inherit;
+    padding: 9px 12px;
+    border: 1px solid rgba(176,143,79,0.4);
+    background: var(--ink-2);
+    color: var(--stock);
+    min-width: 220px;
+  }
+  .error-msg { color: var(--vermilion-d); font-size: 0.88rem; margin: 10px 0; }
+
+  .table-scroll { overflow-x: auto; border: 1px solid rgba(176,143,79,0.3); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; white-space: nowrap; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(176,143,79,0.18); }
+  th { color: var(--brass-lt); font-weight: 700; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; background: var(--ink-2); }
+  td.note-cell { white-space: normal; max-width: 240px; }
+  tr:last-child td { border-bottom: 0; }
+  td select {
+    font: inherit;
+    background: var(--ink-2);
+    color: var(--stock);
+    border: 1px solid rgba(176,143,79,0.4);
+    padding: 5px 8px;
+  }
+  .row-del {
+    font: inherit;
+    font-size: 0.8rem;
+    background: none;
+    border: 1px solid rgba(206,51,39,0.6);
+    color: var(--vermilion);
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .row-del:hover { background: var(--vermilion); color: var(--stock); }
+  .empty-row td { color: var(--on-ink-dim); text-align: center; padding: 30px; }
+
+  /* ---------- SETTINGS FORM ---------- */
+  .settings-form { max-width: 720px; }
+  fieldset { border: 1px solid rgba(176,143,79,0.3); padding: 18px 18px 4px; margin: 0 0 20px; }
+  legend { padding: 0 8px; font-family: var(--serif); font-weight: 700; color: var(--brass-lt); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .settings-form .field label { color: var(--on-ink-dim); }
+  .settings-form .field input,
+  .settings-form .field textarea {
+    width: 100%;
+    font: inherit;
+    padding: 9px 11px;
+    border: 1px solid rgba(176,143,79,0.4);
+    background: var(--ink-2);
+    color: var(--stock);
+  }
+  .settings-form .field textarea { resize: vertical; min-height: 3.5em; }
+  .settings-status { font-size: 0.88rem; color: var(--brass-lt); min-height: 1.3em; margin-top: 8px; }
+
+  @media (max-width: 640px) {
+    .grid2 { grid-template-columns: 1fr; }
+    .who span { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><i>&#9830;</i> xFAF &#8212; organizer</div>
+  <div class="who" id="whoBox" hidden>
+    <span id="whoami"></span>
+    <button class="btn" id="logoutBtn" type="button">Log out</button>
+  </div>
+</div>
+
+<div class="login-wrap" id="loginView">
+  <form class="login-card" id="loginForm" novalidate>
+    <h1>Organizer sign-in</h1>
+    <p class="lede">This page manages xFAF Casino Royale &#8212; registrations and event details.</p>
+    <div class="field">
+      <label for="loginEmail">Email</label>
+      <input type="email" id="loginEmail" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" autocomplete="current-password" required>
+    </div>
+    <button type="submit" class="btn primary" id="loginSubmit">Log in</button>
+    <p class="login-error" id="loginError" role="alert"></p>
+  </form>
+</div>
+
+<div class="dash" id="dashboardView" hidden>
+  <div class="tabs" role="tablist">
+    <button class="tab" id="tabRegs" role="tab" aria-selected="true" type="button">Registrations</button>
+    <button class="tab" id="tabSettings" role="tab" aria-selected="false" type="button">Event settings</button>
+  </div>
+
+  <section id="panelRegs">
+    <div class="panel-head">
+      <h2>Registrations</h2>
+      <input type="search" class="search" id="regsSearch" placeholder="Search name or contact&#8230;">
+    </div>
+    <p class="count" id="regsCount"></p>
+    <p class="error-msg" id="regsError"></p>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Contact</th><th>Group</th><th>Tier</th><th>Note</th><th>Submitted</th><th>Status</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="regsBody"></tbody>
+      </table>
+    </div>
+    <p style="margin-top:16px;"><button class="btn" id="exportCsv" type="button">Export CSV</button></p>
+  </section>
+
+  <section id="panelSettings" hidden>
+    <div class="panel-head"><h2>Event settings</h2></div>
+    <p class="error-msg" id="settingsError"></p>
+    <form class="settings-form" id="settingsForm">
+      <fieldset>
+        <legend>When &amp; where</legend>
+        <div class="field">
+          <label for="setEventDate">Event date &amp; time (used by the countdown)</label>
+          <input type="datetime-local" id="setEventDate" required>
+        </div>
+        <div class="grid2">
+          <div class="field"><label for="setHeroDate">Date label</label><input type="text" id="setHeroDate" placeholder="April 25"></div>
+          <div class="field"><label for="setHeroDateSub">Date sub-line</label><input type="text" id="setHeroDateSub" placeholder="All night long"></div>
+          <div class="field"><label for="setVenueName">Venue name</label><input type="text" id="setVenueName" placeholder="Pensiunea"></div>
+          <div class="field"><label for="setVenueSub">Venue sub-line</label><input type="text" id="setVenueSub" placeholder="Vaca&#539;a della Nonna"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Pricing tiers</legend>
+        <div id="tierFields"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Group bundle &amp; fine print</legend>
+        <div class="field"><label for="setBundleHeadline">Bundle headline</label><input type="text" id="setBundleHeadline"></div>
+        <div class="field"><label for="setBundleNote">Bundle note</label><textarea id="setBundleNote" rows="2"></textarea></div>
+        <div class="field"><label for="setFinePrint">Fine print</label><textarea id="setFinePrint" rows="2"></textarea></div>
+      </fieldset>
+
+      <button type="submit" class="btn primary" id="settingsSave">Save changes</button>
+      <p class="settings-status" id="settingsStatus"></p>
+    </form>
+  </section>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="../firebase-config.js"></script>
+
+<script>
+  const cfg = window.XFAF_FIREBASE_CONFIG;
+  const configured = !!(cfg && cfg.apiKey && cfg.apiKey.indexOf('REPLACE_ME') === -1);
+
+  const loginView = document.getElementById('loginView');
+  const dashboardView = document.getElementById('dashboardView');
+  const whoBox = document.getElementById('whoBox');
+  const loginError = document.getElementById('loginError');
+
+  if (!configured) {
+    loginError.textContent = 'This site is not connected to a Firebase project yet — nothing to sign into.';
+    document.getElementById('loginSubmit').disabled = true;
+  } else {
+    firebase.initializeApp(cfg);
+  }
+  const auth = configured ? firebase.auth() : null;
+  const db = configured ? firebase.firestore() : null;
+
+  /* ---- auth ---- */
+  if (auth) {
+    auth.onAuthStateChanged(function (user) {
+      if (user) {
+        loginView.hidden = true;
+        dashboardView.hidden = false;
+        whoBox.hidden = false;
+        document.getElementById('whoami').textContent = user.email;
+        startRegistrationsListener();
+        loadSettingsIntoForm();
+      } else {
+        dashboardView.hidden = true;
+        whoBox.hidden = true;
+        loginView.hidden = false;
+        stopRegistrationsListener();
+      }
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      loginError.textContent = '';
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('loginSubmit');
+      btn.disabled = true;
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (err) {
+        loginError.textContent = 'That email or password is not right.';
+      }
+      btn.disabled = false;
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      auth.signOut();
+    });
+  }
+
+  /* ---- tabs ---- */
+  const tabRegs = document.getElementById('tabRegs');
+  const tabSettings = document.getElementById('tabSettings');
+  const panelRegs = document.getElementById('panelRegs');
+  const panelSettings = document.getElementById('panelSettings');
+  tabRegs.addEventListener('click', function () { showTab('regs'); });
+  tabSettings.addEventListener('click', function () { showTab('settings'); });
+  function showTab(name) {
+    const isRegs = name === 'regs';
+    tabRegs.setAttribute('aria-selected', String(isRegs));
+    tabSettings.setAttribute('aria-selected', String(!isRegs));
+    panelRegs.hidden = !isRegs;
+    panelSettings.hidden = isRegs;
+  }
+
+  /* ---- registrations, live ---- */
+  let unsubRegs = null;
+  let allRegs = [];
+
+  function startRegistrationsListener() {
+    if (unsubRegs || !db) return;
+    unsubRegs = db.collection('registrations').orderBy('createdAt', 'desc').onSnapshot(function (snap) {
+      document.getElementById('regsError').textContent = '';
+      allRegs = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
+      renderRegistrations();
+    }, function (err) {
+      document.getElementById('regsError').textContent = 'Could not load registrations (' + err.code + ').';
+    });
+  }
+  function stopRegistrationsListener() {
+    if (unsubRegs) { unsubRegs(); unsubRegs = null; }
+    allRegs = [];
+  }
+
+  function renderRegistrations() {
+    const q = document.getElementById('regsSearch').value.trim().toLowerCase();
+    const rows = allRegs.filter(function (r) {
+      if (!q) return true;
+      return (r.name || '').toLowerCase().indexOf(q) !== -1 || (r.contact || '').toLowerCase().indexOf(q) !== -1;
+    });
+    document.getElementById('regsCount').textContent = rows.length + ' of ' + allRegs.length + ' registrations';
+
+    const tbody = document.getElementById('regsBody');
+    tbody.innerHTML = '';
+    if (rows.length === 0) {
+      const tr = document.createElement('tr');
+      tr.className = 'empty-row';
+      tr.innerHTML = '<td colspan="8">' + (allRegs.length === 0 ? 'No registrations yet.' : 'Nothing matches that search.') + '</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+
+    rows.forEach(function (r) {
+      const tr = document.createElement('tr');
+      const when = (r.createdAt && r.createdAt.toDate) ? r.createdAt.toDate().toLocaleString() : '—';
+      tr.innerHTML =
+        '<td>' + escapeHtml(r.name) + '</td>' +
+        '<td>' + escapeHtml(r.contact) + '</td>' +
+        '<td>' + escapeHtml(r.people || '1') + '</td>' +
+        '<td>' + escapeHtml(r.tier) + '</td>' +
+        '<td class="note-cell">' + escapeHtml(r.note) + '</td>' +
+        '<td>' + when + '</td>';
+
+      const statusTd = document.createElement('td');
+      const select = document.createElement('select');
+      ['new', 'confirmed', 'paid'].forEach(function (s) {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+        if ((r.status || 'new') === s) opt.selected = true;
+        select.appendChild(opt);
+      });
+      select.addEventListener('change', function () {
+        db.collection('registrations').doc(r.id).update({ status: select.value }).catch(function () {
+          select.value = r.status || 'new';
+        });
+      });
+      statusTd.appendChild(select);
+      tr.appendChild(statusTd);
+
+      const delTd = document.createElement('td');
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'row-del';
+      delBtn.textContent = 'Remove';
+      delBtn.addEventListener('click', function () {
+        if (confirm('Remove ' + (r.name || 'this registration') + '?')) {
+          db.collection('registrations').doc(r.id).delete();
+        }
+      });
+      delTd.appendChild(delBtn);
+      tr.appendChild(delTd);
+
+      tbody.appendChild(tr);
+    });
+  }
+  document.getElementById('regsSearch').addEventListener('input', renderRegistrations);
+
+  document.getElementById('exportCsv').addEventListener('click', function () {
+    const header = ['Name', 'Contact', 'People', 'Tier', 'Note', 'Status', 'Submitted'];
+    const lines = [header.map(csvCell).join(',')];
+    allRegs.forEach(function (r) {
+      const when = (r.createdAt && r.createdAt.toDate) ? r.createdAt.toDate().toISOString() : '';
+      lines.push([r.name, r.contact, r.people, r.tier, r.note, r.status, when].map(csvCell).join(','));
+    });
+    const blob = new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'xfaf-registrations.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  function csvCell(v) {
+    const s = v == null ? '' : String(v);
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ---- event settings ---- */
+  const DEFAULT_TIERS = [
+    { name: 'The Early Ante', dateLabel: 'March 30 – April 7', from: '03-30', to: '04-07', opens: 'March 30', price: 400 },
+    { name: 'The Main Action', dateLabel: 'April 8 – April 22', from: '04-08', to: '04-22', opens: 'April 8', price: 450 },
+    { name: 'The Final Spin', dateLabel: 'April 23 – April 25', from: '04-23', to: '04-25', opens: 'April 23', price: 500 }
+  ];
+
+  const tierFields = document.getElementById('tierFields');
+  DEFAULT_TIERS.forEach(function (_, i) {
+    const wrap = document.createElement('div');
+    wrap.className = 'grid2';
+    wrap.style.marginBottom = '14px';
+    wrap.innerHTML =
+      '<div class="field"><label for="tier' + i + 'Name">Tier name</label><input type="text" id="tier' + i + 'Name"></div>' +
+      '<div class="field"><label for="tier' + i + 'Price">Price (lei)</label><input type="number" id="tier' + i + 'Price" min="0" step="1"></div>' +
+      '<div class="field"><label for="tier' + i + 'DateLabel">Date range shown</label><input type="text" id="tier' + i + 'DateLabel" placeholder="March 30 – April 7"></div>' +
+      '<div class="field"><label for="tier' + i + 'Opens">"Opens" label (before it starts)</label><input type="text" id="tier' + i + 'Opens" placeholder="March 30"></div>' +
+      '<div class="field"><label for="tier' + i + 'From">Starts (MM-DD)</label><input type="text" id="tier' + i + 'From" placeholder="03-30" pattern="\\d{2}-\\d{2}"></div>' +
+      '<div class="field"><label for="tier' + i + 'To">Ends (MM-DD)</label><input type="text" id="tier' + i + 'To" placeholder="04-07" pattern="\\d{2}-\\d{2}"></div>';
+    tierFields.appendChild(wrap);
+  });
+
+  function setVal(id, v) { const el = document.getElementById(id); if (el && v != null) el.value = v; }
+  function getVal(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+  async function loadSettingsIntoForm() {
+    if (!db) return;
+    document.getElementById('settingsError').textContent = '';
+    try {
+      const snap = await db.collection('settings').doc('event').get();
+      const s = snap.exists ? snap.data() : {};
+
+      setVal('setEventDate', (s.eventDate ? s.eventDate : '2027-04-25T16:00:00').slice(0, 16));
+      setVal('setHeroDate', s.dateLabel || 'April 25');
+      setVal('setHeroDateSub', s.dateSub || 'All night long');
+      setVal('setVenueName', s.venueName || 'Pensiunea');
+      setVal('setVenueSub', s.venueSub || 'Vacața della Nonna');
+
+      const tiers = (Array.isArray(s.tiers) && s.tiers.length === 3) ? s.tiers : DEFAULT_TIERS;
+      tiers.forEach(function (t, i) {
+        setVal('tier' + i + 'Name', t.name);
+        setVal('tier' + i + 'Price', t.price);
+        setVal('tier' + i + 'DateLabel', t.dateLabel);
+        setVal('tier' + i + 'Opens', t.opens);
+        setVal('tier' + i + 'From', t.from);
+        setVal('tier' + i + 'To', t.to);
+      });
+
+      setVal('setBundleHeadline', s.bundleHeadline || 'Bring your crew.');
+      setVal('setBundleNote', s.bundleNote || 'Register as a group of 4 and pay 400 lei each, or as a group of 3 and pay 425 lei each.');
+      setVal('setFinePrint', s.finePrint || 'Your price is set by the day you actually pay, not the day you register. Register as soon as you can so we know to expect you, then send payment before the next step.');
+    } catch (err) {
+      document.getElementById('settingsError').textContent = 'Could not load current settings (' + err.code + ').';
+    }
+  }
+
+  document.getElementById('settingsForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const btn = document.getElementById('settingsSave');
+    const status = document.getElementById('settingsStatus');
+    btn.disabled = true;
+    status.textContent = 'Saving…';
+
+    const tiers = [0, 1, 2].map(function (i) {
+      return {
+        name: getVal('tier' + i + 'Name'),
+        price: Number(getVal('tier' + i + 'Price')) || 0,
+        dateLabel: getVal('tier' + i + 'DateLabel'),
+        opens: getVal('tier' + i + 'Opens'),
+        from: getVal('tier' + i + 'From'),
+        to: getVal('tier' + i + 'To')
+      };
+    });
+
+    const data = {
+      eventDate: getVal('setEventDate') + ':00',
+      dateLabel: getVal('setHeroDate'),
+      dateSub: getVal('setHeroDateSub'),
+      venueName: getVal('setVenueName'),
+      venueSub: getVal('setVenueSub'),
+      tiers: tiers,
+      bundleHeadline: getVal('setBundleHeadline'),
+      bundleNote: getVal('setBundleNote'),
+      finePrint: getVal('setFinePrint')
+    };
+
+    try {
+      await db.collection('settings').doc('event').set(data, { merge: true });
+      status.textContent = 'Saved. The public page picks this up on its next visit.';
+    } catch (err) {
+      status.textContent = 'Could not save (' + err.code + ').';
+    }
+    btn.disabled = false;
+  });
+</script>
+
+</body>
+</html>
