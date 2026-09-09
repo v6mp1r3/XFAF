@@ -171,6 +171,90 @@
   .row-del:hover { background: var(--vermilion); color: var(--stock); }
   .empty-row td { color: var(--on-ink-dim); text-align: center; padding: 30px; }
 
+  td .paid-check { width: 18px; height: 18px; accent-color: var(--vermilion); cursor: pointer; }
+  td .amount-control { display: flex; flex-direction: column; gap: 4px; }
+  td .amount-select,
+  td .amount-custom {
+    width: 108px;
+    font: inherit;
+    background: var(--ink-2);
+    color: var(--stock);
+    border: 1px solid rgba(176,143,79,0.4);
+    padding: 5px 7px;
+  }
+  td .amount-select:focus,
+  td .amount-custom:focus { border-color: var(--brass-lt); outline: none; }
+
+  /* ---------- STATISTICS ---------- */
+  .stat-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+  .stat-tile {
+    border: 1px solid rgba(176,143,79,0.3);
+    padding: 18px 20px;
+  }
+  .stat-tile-value {
+    font-family: var(--serif);
+    font-weight: 900;
+    font-size: 2rem;
+    color: var(--stock);
+    line-height: 1;
+  }
+  .stat-tile-label {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--on-ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .stat-breakdowns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+  }
+  .breakdown-card {
+    border: 1px solid rgba(176,143,79,0.3);
+    padding: 16px 18px 18px;
+  }
+  .breakdown-card h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--brass-lt);
+    margin-bottom: 12px;
+  }
+  .breakdown-empty { font-size: 0.85rem; color: var(--on-ink-dim); margin: 0; }
+  .breakdown-row {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr 2.4rem;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    margin-bottom: 9px;
+  }
+  .breakdown-row:last-child { margin-bottom: 0; }
+  .breakdown-label { color: var(--on-ink-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .breakdown-track {
+    display: block;
+    height: 8px;
+    background: rgba(176,143,79,0.15);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .breakdown-fill { display: block; height: 100%; background: var(--brass); border-radius: 4px; }
+  .breakdown-count { text-align: right; color: var(--stock); font-variant-numeric: tabular-nums; }
+
+  .breakdown-total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(176,143,79,0.4);
+  }
+  .breakdown-total .breakdown-label,
+  .breakdown-total .breakdown-count { color: var(--brass-lt); font-weight: 700; }
+
   /* ---------- SETTINGS FORM ---------- */
   .settings-form { max-width: 720px; }
   fieldset { border: 1px solid rgba(176,143,79,0.3); padding: 18px 18px 4px; margin: 0 0 20px; }
@@ -188,6 +272,21 @@
   }
   .settings-form .field textarea { resize: vertical; min-height: 3.5em; }
   .settings-status { font-size: 0.88rem; color: var(--brass-lt); min-height: 1.3em; margin-top: 8px; }
+
+  .event-switch { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+  .event-switch-label { font-size: 0.85rem; color: var(--on-ink-dim); }
+  .event-btn {
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.85rem;
+    background: none;
+    color: var(--on-ink-dim);
+    border: 1px solid rgba(176,143,79,0.4);
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  .event-btn[aria-pressed="true"] { background: var(--brass); color: var(--ink); border-color: var(--brass); }
+  .event-btn:hover:not([aria-pressed="true"]) { border-color: var(--brass); color: var(--stock); }
 
   @media (max-width: 640px) {
     .grid2 { grid-template-columns: 1fr; }
@@ -208,7 +307,7 @@
 <div class="login-wrap" id="loginView">
   <form class="login-card" id="loginForm" novalidate>
     <h1>Organizer sign-in</h1>
-    <p class="lede">This page manages xFAF Casino Royale &#8212; registrations and event details.</p>
+    <p class="lede">Manage both xFAF editions &#8212; registrations, statistics and event details.</p>
     <div class="field">
       <label for="loginEmail">Email</label>
       <input type="email" id="loginEmail" autocomplete="username" required>
@@ -223,8 +322,15 @@
 </div>
 
 <div class="dash" id="dashboardView" hidden>
+  <div class="event-switch">
+    <span class="event-switch-label">Editing:</span>
+    <button class="event-btn" data-event="spring-2026" type="button" aria-pressed="true">Spring 2026</button>
+    <button class="event-btn" data-event="fall-2026" type="button" aria-pressed="false">Fall 2026</button>
+  </div>
+
   <div class="tabs" role="tablist">
     <button class="tab" id="tabRegs" role="tab" aria-selected="true" type="button">Registrations</button>
+    <button class="tab" id="tabStats" role="tab" aria-selected="false" type="button">Statistics</button>
     <button class="tab" id="tabSettings" role="tab" aria-selected="false" type="button">Event settings</button>
   </div>
 
@@ -239,13 +345,19 @@
       <table>
         <thead>
           <tr>
-            <th>Name</th><th>Contact</th><th>Group</th><th>Tier</th><th>Note</th><th>Submitted</th><th>Status</th><th></th>
+            <th>Name</th><th>Group</th><th>Contact</th><th>Beer</th><th>Stay</th><th>Food</th><th>Pay by</th><th>Tier</th><th>Note</th><th>Submitted</th><th>Paid</th><th>Amount (lei)</th><th></th>
           </tr>
         </thead>
         <tbody id="regsBody"></tbody>
       </table>
     </div>
     <p style="margin-top:16px;"><button class="btn" id="exportCsv" type="button">Export CSV</button></p>
+  </section>
+
+  <section id="panelStats" hidden>
+    <div class="panel-head"><h2>Statistics</h2></div>
+    <div class="stat-tiles" id="statTiles"></div>
+    <div class="stat-breakdowns" id="statBreakdowns"></div>
   </section>
 
   <section id="panelSettings" hidden>
@@ -256,7 +368,7 @@
         <legend>When &amp; where</legend>
         <div class="field">
           <label for="setEventDate">Event date &amp; time (used by the countdown)</label>
-          <input type="datetime-local" id="setEventDate" required>
+          <input type="datetime-local" id="setEventDate">
         </div>
         <div class="grid2">
           <div class="field"><label for="setHeroDate">Date label</label><input type="text" id="setHeroDate" placeholder="April 25"></div>
@@ -307,6 +419,13 @@
   const auth = configured ? firebase.auth() : null;
   const db = configured ? firebase.firestore() : null;
 
+  /* ---- which edition is being managed ----------------------------
+     each edition's data lives at events/{eventId}/registrations and
+     events/{eventId}/settings/event — completely separate from the
+     other edition's, switched here rather than by URL */
+  let currentEventId = 'spring-2026';
+  function eventRef() { return db.collection('events').doc(currentEventId); }
+
   /* ---- auth ---- */
   if (auth) {
     auth.onAuthStateChanged(function (user) {
@@ -347,18 +466,40 @@
 
   /* ---- tabs ---- */
   const tabRegs = document.getElementById('tabRegs');
+  const tabStats = document.getElementById('tabStats');
   const tabSettings = document.getElementById('tabSettings');
   const panelRegs = document.getElementById('panelRegs');
+  const panelStats = document.getElementById('panelStats');
   const panelSettings = document.getElementById('panelSettings');
   tabRegs.addEventListener('click', function () { showTab('regs'); });
+  tabStats.addEventListener('click', function () { showTab('stats'); });
   tabSettings.addEventListener('click', function () { showTab('settings'); });
   function showTab(name) {
-    const isRegs = name === 'regs';
-    tabRegs.setAttribute('aria-selected', String(isRegs));
-    tabSettings.setAttribute('aria-selected', String(!isRegs));
-    panelRegs.hidden = !isRegs;
-    panelSettings.hidden = isRegs;
+    tabRegs.setAttribute('aria-selected', String(name === 'regs'));
+    tabStats.setAttribute('aria-selected', String(name === 'stats'));
+    tabSettings.setAttribute('aria-selected', String(name === 'settings'));
+    panelRegs.hidden = name !== 'regs';
+    panelStats.hidden = name !== 'stats';
+    panelSettings.hidden = name !== 'settings';
   }
+
+  /* ---- event switcher --------------------------------------------
+     switching editions tears down the old listener and starts a
+     fresh one scoped to the new event's own data */
+  document.querySelectorAll('.event-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.event === currentEventId) return;
+      currentEventId = btn.dataset.event;
+      document.querySelectorAll('.event-btn').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      liveTiers = (EVENT_DEFAULTS[currentEventId] || EVENT_DEFAULTS['spring-2026']).tiers;
+      document.getElementById('regsSearch').value = '';
+      stopRegistrationsListener();
+      startRegistrationsListener();
+      loadSettingsIntoForm();
+    });
+  });
 
   /* ---- registrations, live ---- */
   let unsubRegs = null;
@@ -366,10 +507,11 @@
 
   function startRegistrationsListener() {
     if (unsubRegs || !db) return;
-    unsubRegs = db.collection('registrations').orderBy('createdAt', 'desc').onSnapshot(function (snap) {
+    unsubRegs = eventRef().collection('registrations').orderBy('createdAt', 'desc').onSnapshot(function (snap) {
       document.getElementById('regsError').textContent = '';
       allRegs = snap.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
       renderRegistrations();
+      renderStats();
     }, function (err) {
       document.getElementById('regsError').textContent = 'Could not load registrations (' + err.code + ').';
     });
@@ -377,9 +519,15 @@
   function stopRegistrationsListener() {
     if (unsubRegs) { unsubRegs(); unsubRegs = null; }
     allRegs = [];
+    renderRegistrations();
+    renderStats();
   }
 
   function renderRegistrations() {
+    // pinned once per render so a row's controls always write back to the
+    // edition they were rendered under, even if the organizer switches
+    // editions before this row's listener fires again
+    const regsRef = db ? db.collection('events').doc(currentEventId).collection('registrations') : null;
     const q = document.getElementById('regsSearch').value.trim().toLowerCase();
     const rows = allRegs.filter(function (r) {
       if (!q) return true;
@@ -392,38 +540,118 @@
     if (rows.length === 0) {
       const tr = document.createElement('tr');
       tr.className = 'empty-row';
-      tr.innerHTML = '<td colspan="8">' + (allRegs.length === 0 ? 'No registrations yet.' : 'Nothing matches that search.') + '</td>';
+      tr.innerHTML = '<td colspan="13">' + (allRegs.length === 0 ? 'No registrations yet.' : 'Nothing matches that search.') + '</td>';
       tbody.appendChild(tr);
       return;
     }
 
+    const BEER_LABEL = { yes: 'Competing', no: 'Watching' };
+    const STAY_LABEL = { yes: 'Staying', no: 'Leaving' };
+    const PAY_LABEL = { cash: 'Cash', card: 'Card' };
+
     rows.forEach(function (r) {
       const tr = document.createElement('tr');
       const when = (r.createdAt && r.createdAt.toDate) ? r.createdAt.toDate().toLocaleString() : '—';
+      const foodText = r.food === 'other' ? ('Other: ' + (r.foodOther || '')) : (r.food || '');
       tr.innerHTML =
         '<td>' + escapeHtml(r.name) + '</td>' +
+        '<td>' + escapeHtml(r.group) + '</td>' +
         '<td>' + escapeHtml(r.contact) + '</td>' +
-        '<td>' + escapeHtml(r.people || '1') + '</td>' +
+        '<td>' + escapeHtml(BEER_LABEL[r.beer] || r.beer) + '</td>' +
+        '<td>' + escapeHtml(STAY_LABEL[r.stay] || r.stay) + '</td>' +
+        '<td>' + escapeHtml(foodText) + '</td>' +
+        '<td>' + escapeHtml(PAY_LABEL[r.payment] || r.payment) + '</td>' +
         '<td>' + escapeHtml(r.tier) + '</td>' +
         '<td class="note-cell">' + escapeHtml(r.note) + '</td>' +
         '<td>' + when + '</td>';
 
-      const statusTd = document.createElement('td');
-      const select = document.createElement('select');
-      ['new', 'confirmed', 'paid'].forEach(function (s) {
+      const suggestedAmount = r.amountPaid || guessTierPrice(r);
+
+      // Amount: pick one of the site's current ticket prices, or type a
+      // custom one — built first so the Paid checkbox can read its value.
+      const priceOptions = getCurrentPrices();
+      const amountSelect = document.createElement('select');
+      amountSelect.className = 'amount-select';
+      amountSelect.setAttribute('aria-label', 'Amount for ' + (r.name || 'this registration'));
+      priceOptions.forEach(function (price) {
         const opt = document.createElement('option');
-        opt.value = s;
-        opt.textContent = s.charAt(0).toUpperCase() + s.slice(1);
-        if ((r.status || 'new') === s) opt.selected = true;
-        select.appendChild(opt);
+        opt.value = String(price);
+        opt.textContent = price + ' lei';
+        amountSelect.appendChild(opt);
       });
-      select.addEventListener('change', function () {
-        db.collection('registrations').doc(r.id).update({ status: select.value }).catch(function () {
-          select.value = r.status || 'new';
+      const customOpt = document.createElement('option');
+      customOpt.value = 'custom';
+      customOpt.textContent = 'Custom…';
+      amountSelect.appendChild(customOpt);
+
+      const customInput = document.createElement('input');
+      customInput.type = 'number';
+      customInput.className = 'amount-custom';
+      customInput.min = '0';
+      customInput.step = '1';
+      customInput.placeholder = 'lei';
+      customInput.hidden = true;
+
+      const startAmount = r.amountPaid || suggestedAmount || 0;
+      if (startAmount && priceOptions.indexOf(startAmount) !== -1) {
+        amountSelect.value = String(startAmount);
+      } else if (startAmount) {
+        amountSelect.value = 'custom';
+        customInput.hidden = false;
+        customInput.value = String(startAmount);
+      } else if (priceOptions.length) {
+        amountSelect.value = String(priceOptions[0]); // a default to start from, not yet saved
+      }
+
+      function currentAmountValue() {
+        if (amountSelect.value === 'custom') return Math.max(0, Number(customInput.value) || 0);
+        return Number(amountSelect.value) || 0;
+      }
+
+      amountSelect.addEventListener('change', function () {
+        if (amountSelect.value === 'custom') {
+          customInput.hidden = false;
+          customInput.focus();
+          return; // wait for an actual number before saving anything
+        }
+        customInput.hidden = true;
+        regsRef.doc(r.id).update({ amountPaid: Number(amountSelect.value) || 0 })
+          .catch(function () {});
+      });
+      customInput.addEventListener('change', function () {
+        const val = Math.max(0, Number(customInput.value) || 0);
+        customInput.value = val ? String(val) : '';
+        regsRef.doc(r.id).update({ amountPaid: val }).catch(function () {});
+      });
+
+      const paidTd = document.createElement('td');
+      const paidCheck = document.createElement('input');
+      paidCheck.type = 'checkbox';
+      paidCheck.className = 'paid-check';
+      paidCheck.checked = !!r.paid;
+      paidCheck.setAttribute('aria-label', 'Mark ' + (r.name || 'this registration') + ' as paid');
+      paidCheck.addEventListener('change', function () {
+        // checking "Paid" with no amount recorded yet saves whatever the
+        // amount control is currently showing, so this is usually one click
+        const update = { paid: paidCheck.checked };
+        if (paidCheck.checked && !r.amountPaid) {
+          const val = currentAmountValue();
+          if (val) update.amountPaid = val;
+        }
+        regsRef.doc(r.id).update(update).catch(function () {
+          paidCheck.checked = !!r.paid;
         });
       });
-      statusTd.appendChild(select);
-      tr.appendChild(statusTd);
+      paidTd.appendChild(paidCheck);
+      tr.appendChild(paidTd);
+
+      const amountTd = document.createElement('td');
+      const amountWrap = document.createElement('div');
+      amountWrap.className = 'amount-control';
+      amountWrap.appendChild(amountSelect);
+      amountWrap.appendChild(customInput);
+      amountTd.appendChild(amountWrap);
+      tr.appendChild(amountTd);
 
       const delTd = document.createElement('td');
       const delBtn = document.createElement('button');
@@ -432,7 +660,7 @@
       delBtn.textContent = 'Remove';
       delBtn.addEventListener('click', function () {
         if (confirm('Remove ' + (r.name || 'this registration') + '?')) {
-          db.collection('registrations').doc(r.id).delete();
+          regsRef.doc(r.id).delete();
         }
       });
       delTd.appendChild(delBtn);
@@ -441,14 +669,119 @@
       tbody.appendChild(tr);
     });
   }
+
+  /* ---- statistics ---- */
+  function renderStats() {
+    const total = allRegs.length;
+    const paidCount = allRegs.filter(function (r) { return !!r.paid; }).length;
+    // only rows actually marked Paid count toward money in hand — an
+    // amount left over from before someone unchecked Paid should not
+    const totalCollected = allRegs.reduce(function (sum, r) { return sum + (r.paid ? (Number(r.amountPaid) || 0) : 0); }, 0);
+
+    const tiles = [
+      { value: String(total), label: 'Registrations' },
+      { value: String(paidCount), label: 'Paid' },
+      { value: String(total - paidCount), label: 'Not paid yet' },
+      { value: totalCollected + ' lei', label: 'Collected' }
+    ];
+    const tilesEl = document.getElementById('statTiles');
+    tilesEl.innerHTML = '';
+    tiles.forEach(function (t) {
+      const div = document.createElement('div');
+      div.className = 'stat-tile';
+      div.innerHTML = '<div class="stat-tile-value">' + escapeHtml(t.value) + '</div><div class="stat-tile-label">' + escapeHtml(t.label) + '</div>';
+      tilesEl.appendChild(div);
+    });
+
+    const breakdownsEl = document.getElementById('statBreakdowns');
+    breakdownsEl.innerHTML = '';
+    breakdownsEl.appendChild(buildBreakdown('By cohort', countByCohort(allRegs), total, { showTotal: true }));
+    breakdownsEl.appendChild(buildBreakdown('By pricing tier', countBy(allRegs, 'tier', null), total));
+    breakdownsEl.appendChild(buildBreakdown('By payment method', countBy(allRegs, 'payment', { cash: 'Cash', card: 'Card' }), total));
+    breakdownsEl.appendChild(buildBreakdown('Beerlympics', countBy(allRegs, 'beer', { yes: 'Competing', no: 'Watching' }), total));
+    breakdownsEl.appendChild(buildBreakdown('Staying the night', countBy(allRegs, 'stay', { yes: 'Staying', no: 'Leaving' }), total));
+    breakdownsEl.appendChild(buildBreakdown('Food preference', countBy(allRegs, 'food', { none: 'None', vegetarian: 'Vegetarian', vegan: 'Vegan', other: 'Other' }), total));
+  }
+
+  function countBy(rows, field, labels) {
+    const counts = {};
+    rows.forEach(function (r) {
+      const raw = r[field];
+      if (raw == null || raw === '') return;
+      counts[raw] = (counts[raw] || 0) + 1;
+    });
+    return Object.keys(counts)
+      .map(function (key) { return { label: (labels && labels[key]) || key, count: counts[key] }; })
+      .sort(function (a, b) { return b.count - a.count; });
+  }
+
+  /* groups "FAF-253" into the cohort "FAF-25X" — the first two digits
+     of the group code, the way the old spreadsheet's "Torent" column did */
+  function cohortOf(group) {
+    const m = String(group || '').trim().match(/^([A-Za-z]+-?)?(\d{2})/);
+    if (!m) return 'Other';
+    return (m[1] || '') + m[2] + 'X';
+  }
+  function countByCohort(rows) {
+    const counts = {};
+    rows.forEach(function (r) {
+      if (!r.group || !String(r.group).trim()) return;
+      const key = cohortOf(r.group);
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    return Object.keys(counts)
+      .sort()
+      .map(function (key) { return { label: key, count: counts[key] }; });
+  }
+
+  function buildBreakdown(title, items, total, opts) {
+    const card = document.createElement('div');
+    card.className = 'breakdown-card';
+    const h3 = document.createElement('h3');
+    h3.textContent = title;
+    card.appendChild(h3);
+    if (items.length === 0 || total === 0) {
+      const p = document.createElement('p');
+      p.className = 'breakdown-empty';
+      p.textContent = 'No data yet.';
+      card.appendChild(p);
+      return card;
+    }
+    const peak = items.reduce(function (m, it) { return Math.max(m, it.count); }, 0);
+    items.forEach(function (item) {
+      const pct = peak ? Math.round((item.count / peak) * 100) : 0;
+      const row = document.createElement('div');
+      row.className = 'breakdown-row';
+      row.innerHTML =
+        '<span class="breakdown-label">' + escapeHtml(item.label) + '</span>' +
+        '<span class="breakdown-track"><span class="breakdown-fill" style="width:' + pct + '%"></span></span>' +
+        '<span class="breakdown-count">' + item.count + '</span>';
+      card.appendChild(row);
+    });
+    if (opts && opts.showTotal) {
+      const sum = items.reduce(function (s, it) { return s + it.count; }, 0);
+      const row = document.createElement('div');
+      row.className = 'breakdown-row breakdown-total';
+      row.innerHTML =
+        '<span class="breakdown-label">Total</span>' +
+        '<span class="breakdown-track"></span>' +
+        '<span class="breakdown-count">' + sum + '</span>';
+      card.appendChild(row);
+    }
+    return card;
+  }
   document.getElementById('regsSearch').addEventListener('input', renderRegistrations);
 
   document.getElementById('exportCsv').addEventListener('click', function () {
-    const header = ['Name', 'Contact', 'People', 'Tier', 'Note', 'Status', 'Submitted'];
+    const header = ['Name', 'Group', 'Contact', 'Beerlympics', 'Staying', 'Food', 'Payment', 'Tier', 'Note', 'Paid', 'Amount (lei)', 'Submitted'];
     const lines = [header.map(csvCell).join(',')];
     allRegs.forEach(function (r) {
       const when = (r.createdAt && r.createdAt.toDate) ? r.createdAt.toDate().toISOString() : '';
-      lines.push([r.name, r.contact, r.people, r.tier, r.note, r.status, when].map(csvCell).join(','));
+      const foodText = r.food === 'other' ? ('Other: ' + (r.foodOther || '')) : (r.food || '');
+      lines.push([
+        r.name, r.group, r.contact, r.beer, r.stay, foodText, r.payment, r.tier, r.note,
+        r.paid ? 'Yes' : 'No', r.amountPaid || 0, when
+      ].map(csvCell).join(','));
     });
     const blob = new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -472,56 +805,121 @@
   }
 
   /* ---- event settings ---- */
-  const DEFAULT_TIERS = [
-    { name: 'The Early Ante', dateLabel: 'March 30 – April 7', from: '03-30', to: '04-07', opens: 'March 30', price: 400 },
-    { name: 'The Main Action', dateLabel: 'April 8 – April 22', from: '04-08', to: '04-22', opens: 'April 8', price: 450 },
-    { name: 'The Final Spin', dateLabel: 'April 23 – April 25', from: '04-23', to: '04-25', opens: 'April 23', price: 500 }
-  ];
+  // starting point for each edition until the organizer saves real
+  // settings for it — Fall's are placeholders (no eventDate at all,
+  // so the public page never shows a made-up countdown target)
+  const EVENT_DEFAULTS = {
+    'spring-2026': {
+      eventDate: '2027-04-25T16:00:00',
+      dateLabel: 'April 25', dateSub: 'All night long',
+      venueName: 'Pensiunea', venueSub: 'Vacața della Nonna',
+      tiers: [
+        { name: 'The Early Ante', dateLabel: 'March 30 – April 7', from: '03-30', to: '04-07', opens: 'March 30', price: 400 },
+        { name: 'The Main Action', dateLabel: 'April 8 – April 22', from: '04-08', to: '04-22', opens: 'April 8', price: 450 },
+        { name: 'The Final Spin', dateLabel: 'April 23 – April 25', from: '04-23', to: '04-25', opens: 'April 23', price: 500 }
+      ],
+      bundleHeadline: 'Bring your crew.',
+      bundleNote: 'Register as a group of 4 and pay 400 lei each, or as a group of 3 and pay 425 lei each.',
+      finePrint: 'Your price is set by the day you actually pay, not the day you register. Register as soon as you can so we know to expect you, then send payment before the next step.'
+    },
+    'fall-2026': {
+      eventDate: '',
+      dateLabel: 'TBA', dateSub: 'Autumn 2026',
+      venueName: 'TBA', venueSub: 'Location to be announced',
+      tiers: [
+        { name: 'Early Bird', dateLabel: 'September 1 – September 30', from: '09-01', to: '09-30', opens: 'September 1', price: 350 },
+        { name: 'Standard', dateLabel: 'October 1 – October 20', from: '10-01', to: '10-20', opens: 'October 1', price: 400 },
+        { name: 'Last Call', dateLabel: 'October 21 – November 1', from: '10-21', to: '11-01', opens: 'October 21', price: 450 }
+      ],
+      bundleHeadline: 'Bring your crew.',
+      bundleNote: 'Group pricing will be announced with the rest of the details.',
+      finePrint: 'These prices and dates are placeholders until the organizer confirms the real ones.'
+    }
+  };
+  // updated once the organizer's saved settings load, so the amount
+  // guess below reflects real prices rather than always the defaults
+  let liveTiers = EVENT_DEFAULTS[currentEventId].tiers;
+
+  // best-effort ticket price for a registration, so marking it "Paid"
+  // can fill in the amount instead of making you type it every time
+  function guessTierPrice(r) {
+    if (r.tierPrice) return r.tierPrice;
+    if (!r.tier) return 0;
+    const match = liveTiers.find(function (t) { return t.name === r.tier; });
+    return match ? match.price : 0;
+  }
+
+  // the site's current ticket prices, for the Amount dropdown — de-duped
+  // and sorted, so "Custom…" is only needed for a genuine one-off amount
+  function getCurrentPrices() {
+    const seen = {};
+    liveTiers.forEach(function (t) { if (t.price) seen[t.price] = true; });
+    return Object.keys(seen).map(Number).sort(function (a, b) { return a - b; });
+  }
 
   const tierFields = document.getElementById('tierFields');
-  DEFAULT_TIERS.forEach(function (_, i) {
+  EVENT_DEFAULTS['spring-2026'].tiers.forEach(function (_, i) {
     const wrap = document.createElement('div');
     wrap.className = 'grid2';
     wrap.style.marginBottom = '14px';
     wrap.innerHTML =
       '<div class="field"><label for="tier' + i + 'Name">Tier name</label><input type="text" id="tier' + i + 'Name"></div>' +
       '<div class="field"><label for="tier' + i + 'Price">Price (lei)</label><input type="number" id="tier' + i + 'Price" min="0" step="1"></div>' +
-      '<div class="field"><label for="tier' + i + 'DateLabel">Date range shown</label><input type="text" id="tier' + i + 'DateLabel" placeholder="March 30 – April 7"></div>' +
-      '<div class="field"><label for="tier' + i + 'Opens">"Opens" label (before it starts)</label><input type="text" id="tier' + i + 'Opens" placeholder="March 30"></div>' +
-      '<div class="field"><label for="tier' + i + 'From">Starts (MM-DD)</label><input type="text" id="tier' + i + 'From" placeholder="03-30" pattern="\\d{2}-\\d{2}"></div>' +
-      '<div class="field"><label for="tier' + i + 'To">Ends (MM-DD)</label><input type="text" id="tier' + i + 'To" placeholder="04-07" pattern="\\d{2}-\\d{2}"></div>';
+      '<div class="field"><label for="tier' + i + 'From">Starts</label><input type="date" id="tier' + i + 'From"></div>' +
+      '<div class="field"><label for="tier' + i + 'To">Ends</label><input type="date" id="tier' + i + 'To"></div>';
     tierFields.appendChild(wrap);
   });
+
+  /* the public page only ever shows month + day ("March 30"), so the
+     tier pickers just need a date to click — the display text and the
+     "opens" label are generated from it instead of typed by hand */
+  function monthDay(isoDate) {
+    if (!isoDate) return '';
+    const parts = isoDate.split('-');
+    const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+  }
+  function toMonthDayCode(isoDate) {
+    return isoDate ? isoDate.slice(5) : ''; // "2027-03-30" -> "03-30"
+  }
 
   function setVal(id, v) { const el = document.getElementById(id); if (el && v != null) el.value = v; }
   function getVal(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
 
   async function loadSettingsIntoForm() {
     if (!db) return;
+    const thisEventId = currentEventId; // guard against a switch mid-fetch
+    const defaults = EVENT_DEFAULTS[thisEventId] || EVENT_DEFAULTS['spring-2026'];
     document.getElementById('settingsError').textContent = '';
     try {
-      const snap = await db.collection('settings').doc('event').get();
+      const snap = await eventRef().collection('settings').doc('event').get();
+      if (thisEventId !== currentEventId) return; // organizer switched away while this was loading
       const s = snap.exists ? snap.data() : {};
 
-      setVal('setEventDate', (s.eventDate ? s.eventDate : '2027-04-25T16:00:00').slice(0, 16));
-      setVal('setHeroDate', s.dateLabel || 'April 25');
-      setVal('setHeroDateSub', s.dateSub || 'All night long');
-      setVal('setVenueName', s.venueName || 'Pensiunea');
-      setVal('setVenueSub', s.venueSub || 'Vacața della Nonna');
+      const eventDateVal = s.eventDate != null ? s.eventDate : defaults.eventDate;
+      setVal('setEventDate', eventDateVal ? eventDateVal.slice(0, 16) : '');
+      setVal('setHeroDate', s.dateLabel || defaults.dateLabel);
+      setVal('setHeroDateSub', s.dateSub || defaults.dateSub);
+      setVal('setVenueName', s.venueName || defaults.venueName);
+      setVal('setVenueSub', s.venueSub || defaults.venueSub);
 
-      const tiers = (Array.isArray(s.tiers) && s.tiers.length === 3) ? s.tiers : DEFAULT_TIERS;
+      // the pickers need a full date; tiers are stored without a year
+      // (they're assumed to fall in the event's own year), so borrow one
+      // — the event's own year if it has a date yet, else the current year
+      const tierYear = eventDateVal ? new Date(eventDateVal).getFullYear() : new Date().getFullYear();
+      const tiers = (Array.isArray(s.tiers) && s.tiers.length === 3) ? s.tiers : defaults.tiers;
+      liveTiers = tiers;
+      renderRegistrations(); // refresh any amount placeholders now that real prices are known
       tiers.forEach(function (t, i) {
         setVal('tier' + i + 'Name', t.name);
         setVal('tier' + i + 'Price', t.price);
-        setVal('tier' + i + 'DateLabel', t.dateLabel);
-        setVal('tier' + i + 'Opens', t.opens);
-        setVal('tier' + i + 'From', t.from);
-        setVal('tier' + i + 'To', t.to);
+        setVal('tier' + i + 'From', t.from ? (tierYear + '-' + t.from) : '');
+        setVal('tier' + i + 'To', t.to ? (tierYear + '-' + t.to) : '');
       });
 
-      setVal('setBundleHeadline', s.bundleHeadline || 'Bring your crew.');
-      setVal('setBundleNote', s.bundleNote || 'Register as a group of 4 and pay 400 lei each, or as a group of 3 and pay 425 lei each.');
-      setVal('setFinePrint', s.finePrint || 'Your price is set by the day you actually pay, not the day you register. Register as soon as you can so we know to expect you, then send payment before the next step.');
+      setVal('setBundleHeadline', s.bundleHeadline || defaults.bundleHeadline);
+      setVal('setBundleNote', s.bundleNote || defaults.bundleNote);
+      setVal('setFinePrint', s.finePrint || defaults.finePrint);
     } catch (err) {
       document.getElementById('settingsError').textContent = 'Could not load current settings (' + err.code + ').';
     }
@@ -535,18 +933,23 @@
     status.textContent = 'Saving…';
 
     const tiers = [0, 1, 2].map(function (i) {
+      const from = getVal('tier' + i + 'From'); // "2027-03-30"
+      const to = getVal('tier' + i + 'To');
       return {
         name: getVal('tier' + i + 'Name'),
         price: Number(getVal('tier' + i + 'Price')) || 0,
-        dateLabel: getVal('tier' + i + 'DateLabel'),
-        opens: getVal('tier' + i + 'Opens'),
-        from: getVal('tier' + i + 'From'),
-        to: getVal('tier' + i + 'To')
+        dateLabel: monthDay(from) + ' – ' + monthDay(to),
+        opens: monthDay(from),
+        from: toMonthDayCode(from),
+        to: toMonthDayCode(to)
       };
     });
 
+    const eventDateInput = getVal('setEventDate');
     const data = {
-      eventDate: getVal('setEventDate') + ':00',
+      // an empty field saves as "" on purpose — the public page then shows
+      // "date to be announced" instead of a countdown to a made-up date
+      eventDate: eventDateInput ? eventDateInput + ':00' : '',
       dateLabel: getVal('setHeroDate'),
       dateSub: getVal('setHeroDateSub'),
       venueName: getVal('setVenueName'),
@@ -558,7 +961,7 @@
     };
 
     try {
-      await db.collection('settings').doc('event').set(data, { merge: true });
+      await eventRef().collection('settings').doc('event').set(data, { merge: true });
       status.textContent = 'Saved. The public page picks this up on its next visit.';
     } catch (err) {
       status.textContent = 'Could not save (' + err.code + ').';

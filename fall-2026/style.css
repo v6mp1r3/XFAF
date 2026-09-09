@@ -1,0 +1,839 @@
+  /* ============================================================
+     xFAF: Back to USSR
+     Constructivist propaganda-poster language: aged paper stock,
+     poster red and brass-gold ink, condensed display type, a star
+     standing in for the Casino edition's suits and cards.
+     ============================================================ */
+
+  :root {
+    --paper:      #E8E0C8;  /* aged poster stock */
+    --paper-2:    #DACD9E;  /* half-tone of the stock */
+    --ink:        #201D16;  /* poster ink, warm near-black */
+    --ink-2:      #2B271D;  /* raised ink, for panels */
+    --ink-3:      #17140F;  /* deepest ink, for the footer */
+    --red:        #A32A26;  /* poster red */
+    --red-d:      #7C1F1C;  /* same red, safe at small sizes */
+    --gold:       #A9863C;  /* hairline brass-gold */
+    --gold-lt:    #CDA35C;  /* gold on ink */
+    --on-ink-dim: #B7AC8C;
+    --on-paper-dim: #5B5342;
+
+    --measure: 66ch;
+    --gutter: clamp(20px, 5vw, 40px);
+
+    --display: 'Oswald', 'Arial Narrow', sans-serif;
+    --sans: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--display);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin: 0 0 0.4em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  p { margin: 0 0 1em; }
+  p:last-child { margin-bottom: 0; }
+  a { color: inherit; }
+  img { max-width: 100%; }
+
+  :focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 3px;
+  }
+  .on-ink :focus-visible,
+  .site-nav :focus-visible,
+  .hero :focus-visible { outline-color: var(--gold-lt); }
+
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 8px;
+    background: var(--paper);
+    color: var(--ink);
+    padding: 10px 18px;
+    font-weight: 700;
+    z-index: 100;
+  }
+  .skip-link:focus { left: 12px; }
+
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+
+  section { padding: clamp(54px, 9vw, 92px) 0; }
+  section[id], .sheet[id] { scroll-margin-top: 84px; }
+
+  .on-ink { background: var(--ink); color: var(--paper); }
+  .on-ink .lede { color: var(--on-ink-dim); }
+  .lede { color: var(--on-paper-dim); max-width: 54ch; }
+  .section-tight { padding-top: 0; }
+
+  /* ---------- THE DECREE FRAME --------------------------------
+     A heavy ink border with a thin red rule just inside it — the
+     look of an official seal or certificate, sharp square corners
+     rather than the Casino edition's notched playing-card frame.
+     --------------------------------------------------------- */
+
+  .plate { background: var(--ink); padding: 5px; }
+  .plate-in {
+    position: relative;
+    background: var(--paper);
+    padding: clamp(20px, 4vw, 34px);
+    border: 2px solid var(--red);
+  }
+
+  /* ---------- STAR RULE ----------------------------------------
+     rule / star / rule — one star standing in for the four suits.
+     Used once in the hero and once in the footer.
+     --------------------------------------------------------- */
+
+  .suit-rule {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 20px 0 22px;
+    color: var(--ink);
+  }
+  .suit-rule::before,
+  .suit-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.45;
+  }
+  .suit-rule b {
+    font-size: 1.1rem;
+    color: var(--red);
+    font-weight: 400;
+  }
+
+  /* a small five-point star, used as the section marker and nav mark */
+  .star {
+    display: inline-block;
+    background: var(--red);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+
+  /* ---------- NAV --------------------------------------------- */
+
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--ink);
+    border-bottom: 1px solid rgba(169,134,60,0.35);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 11px var(--gutter);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--display);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--paper);
+    text-decoration: none;
+    flex-shrink: 0;
+    letter-spacing: 0.03em;
+  }
+  .nav-brand .star { width: 12px; height: 12px; }
+
+  .nav-scroll {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+  }
+  .nav-links {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 4px 26px 4px 0;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-scroll::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 26px;
+    background: linear-gradient(to right, rgba(32,29,22,0), var(--ink));
+    pointer-events: none;
+  }
+  .nav-links a {
+    color: var(--on-ink-dim);
+    text-decoration: none;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    padding-bottom: 3px;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-links a:hover { color: var(--paper); }
+  .nav-links a[aria-current] {
+    color: var(--paper);
+    border-bottom-color: var(--red);
+  }
+
+  .nav-cta {
+    flex-shrink: 0;
+    background: var(--gold);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 8px 17px;
+  }
+  .nav-cta:hover { background: var(--gold-lt); }
+
+  /* ---------- HERO -------------------------------------------- */
+
+  .hero {
+    background:
+      radial-gradient(rgba(169,134,60,0.18) 1px, transparent 1.4px) 0 0/16px 16px,
+      var(--ink);
+    padding: clamp(34px, 6vw, 64px) var(--gutter) clamp(44px, 7vw, 76px);
+  }
+  .poster {
+    max-width: 660px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .poster .plate-in { padding: clamp(26px, 4.5vw, 42px) clamp(22px, 5vw, 46px); }
+
+  .presenter {
+    display: inline-block;
+    background: var(--red);
+    color: var(--paper);
+    font-family: var(--display);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 8px 26px;
+    margin-bottom: 22px;
+    clip-path: polygon(0 0, 100% 0, 95% 50%, 100% 100%, 0 100%, 5% 50%);
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 13vw, 5.4rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+  .hero h1 span { display: block; }
+
+  .hero .tagline {
+    font-size: 1.06rem;
+    color: var(--on-paper-dim);
+    max-width: 44ch;
+    margin: 0 auto;
+  }
+
+  /* the two-part stub: date on one side, venue on the other */
+  .stub {
+    display: flex;
+    justify-content: center;
+    margin: 26px 0 28px;
+    border-top: 1px solid rgba(32,29,22,0.2);
+    border-bottom: 1px solid rgba(32,29,22,0.2);
+  }
+  .stub div {
+    padding: 15px 26px;
+    text-align: center;
+  }
+  .stub div + div { border-left: 1px dashed rgba(32,29,22,0.35); }
+  .stub b {
+    display: block;
+    font-family: var(--display);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1.2;
+  }
+  .stub span {
+    display: block;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-paper-dim);
+    margin-top: 3px;
+  }
+
+  .cta {
+    display: inline-block;
+    background: var(--red);
+    color: var(--paper);
+    text-decoration: none;
+    font-family: var(--display);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 600;
+    font-size: 1.02rem;
+    padding: 15px 34px;
+    border: 2px solid var(--ink);
+    transition: background 0.15s ease;
+  }
+  .cta:hover { background: var(--red-d); }
+
+  .cta-quiet {
+    display: block;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: var(--on-paper-dim);
+    text-underline-offset: 4px;
+  }
+  .cta-quiet:hover { color: var(--red-d); }
+
+  /* ---------- COUNTDOWN --------------------------------------- */
+
+  .countdown {
+    max-width: 660px;
+    margin: clamp(26px, 4vw, 40px) auto 0;
+    text-align: center;
+  }
+  .countdown-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-lt);
+    margin-bottom: 12px;
+  }
+  .countdown-grid {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: clamp(12px, 4vw, 34px);
+  }
+  .countdown-grid div { min-width: 3.4ch; text-align: center; }
+  .countdown-grid b {
+    display: block;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1.9rem, 7vw, 2.9rem);
+    color: var(--paper);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .countdown-grid span {
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--on-ink-dim);
+    margin-top: 7px;
+  }
+  .countdown-grid i {
+    font-style: normal;
+    color: var(--red);
+    font-size: 0.55rem;
+    align-self: baseline;
+    transform: translateY(-0.9em);
+  }
+  .countdown.is-tonight .countdown-grid { display: none; }
+  .countdown-tonight {
+    display: none;
+    font-family: var(--display);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 5vw, 2.1rem);
+    color: var(--gold-lt);
+  }
+  .countdown.is-tonight .countdown-tonight { display: block; }
+
+  .countdown.is-unset .countdown-grid { display: none; }
+  .countdown-unset {
+    display: none;
+    font-size: 0.9rem;
+    color: var(--on-ink-dim);
+  }
+  .countdown.is-unset .countdown-unset { display: block; }
+
+  /* ---------- SECTION HEADS ----------------------------------
+     A gold hairline with a red star sitting on it, then the
+     heading below.
+     --------------------------------------------------------- */
+
+  .head { margin-bottom: clamp(26px, 4vw, 40px); }
+  .head-rule {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: var(--gold);
+  }
+  .head-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+  .lozenge {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+  }
+  .lozenge.star { background: var(--red); }
+  .lozenge span { display: none; }
+  .head h2 {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 700;
+    max-width: 22ch;
+  }
+
+  /* ---------- ABOUT ------------------------------------------- */
+
+  .about {
+    display: grid;
+    grid-template-columns: 1.4fr 0.9fr;
+    gap: clamp(28px, 5vw, 52px);
+    align-items: center;
+  }
+  .about p { max-width: var(--measure); }
+  .about-art { width: 100%; height: auto; display: block; }
+
+  /* ---------- MEDIA PLATES / PLACEHOLDERS ---------------------- */
+
+  .plate-zoom {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+    font: inherit;
+    color: inherit;
+  }
+  .plate-zoom img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .plate-note {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    margin-top: 12px;
+    font-size: 0.82rem;
+    color: var(--on-paper-dim);
+  }
+  .plate-note em { font-style: normal; color: var(--red-d); }
+
+  /* a section whose real content hasn't been announced yet */
+  .tbd-card {
+    text-align: center;
+    padding: clamp(34px, 6vw, 56px) 20px;
+  }
+  .tbd-card .star { width: 22px; height: 22px; margin: 0 auto 14px; }
+  .tbd-card p {
+    font-family: var(--display);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 1.05rem;
+    color: var(--on-paper-dim);
+  }
+
+  /* the sections run as one passage, hairline-separated */
+  .sheet + .sheet {
+    margin-top: clamp(48px, 8vw, 80px);
+    padding-top: clamp(48px, 8vw, 80px);
+    border-top: 1px solid rgba(32,29,22,0.14);
+  }
+
+  /* ---------- GALLERY ----------------------------------------- */
+
+  .gallery { max-width: 720px; }
+  .gallery-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .gallery-top h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--paper);
+  }
+  .upload-btn {
+    background: none;
+    color: var(--gold-lt);
+    border: 1px solid var(--gold);
+    padding: 10px 20px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .upload-btn:hover { background: var(--gold); color: var(--ink); }
+  #photoInput { display: none; }
+  #uploadStatus {
+    font-size: 0.85rem;
+    color: var(--on-ink-dim);
+    min-height: 1.4em;
+    margin: 0 0 14px;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+    gap: 12px;
+  }
+  .gallery-grid:empty { display: none; }
+  .gallery-grid img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: var(--ink-2);
+    border: 2px solid var(--paper);
+  }
+
+  .gallery-empty {
+    display: flex;
+    gap: clamp(10px, 3vw, 26px);
+    padding: 12px 0 4px 10px;
+  }
+  .gallery-empty div {
+    width: clamp(78px, 22vw, 116px);
+    background: var(--paper);
+    padding: 8px 8px 26px;
+    box-shadow: 0 10px 24px -14px rgba(0,0,0,0.9);
+  }
+  .gallery-empty div::before {
+    content: '';
+    display: block;
+    aspect-ratio: 1;
+    background: var(--paper-2);
+  }
+  .gallery-empty div:nth-child(1) { transform: rotate(-6deg); }
+  .gallery-empty div:nth-child(2) { transform: rotate(1.5deg); }
+  .gallery-empty div:nth-child(3) { transform: rotate(7deg); }
+  .gallery-empty-note {
+    font-size: 0.88rem;
+    color: var(--on-ink-dim);
+    margin: 24px 0 0;
+  }
+
+  /* ---------- PRICE LADDER ------------------------------------ */
+
+  .ladder {
+    list-style: none;
+    margin: 0 0 clamp(28px, 4vw, 40px);
+    padding: 0;
+    max-width: 660px;
+  }
+  .rung {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    column-gap: 12px;
+    row-gap: 5px;
+    padding: 17px 14px;
+    border-bottom: 1px solid rgba(169,134,60,0.3);
+    border-left: 3px solid transparent;
+  }
+  .rung:first-child { border-top: 1px solid rgba(169,134,60,0.3); }
+  .rung-pip { color: var(--red); font-size: 1.05rem; line-height: 1.3; }
+
+  .rung-line {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    column-gap: 16px;
+    align-items: baseline;
+  }
+  .rung-name {
+    font-family: var(--display);
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 1.1rem;
+    line-height: 1.2;
+  }
+  .rung-dots {
+    height: 0;
+    border-bottom: 2px dotted rgba(169,134,60,0.65);
+    transform: translateY(-5px);
+  }
+  .rung-price {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.7rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .rung-price span {
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+  }
+
+  .rung-meta {
+    grid-column: 2;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    color: var(--on-ink-dim);
+  }
+  .rung-tag {
+    display: none;
+    margin-left: 10px;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 3px 8px;
+    vertical-align: 1px;
+  }
+  .rung.is-now { background: rgba(232,224,200,0.07); border-left-color: var(--red); }
+  .rung.is-now .rung-tag {
+    display: inline-block;
+    background: var(--red);
+    color: var(--paper);
+  }
+  .rung.is-next .rung-tag {
+    display: inline-block;
+    border: 1px solid var(--gold);
+    color: var(--gold-lt);
+  }
+  .rung.is-past { opacity: 0.45; }
+  .rung.is-past .rung-price { text-decoration: line-through; text-decoration-thickness: 2px; }
+
+  .bundle {
+    max-width: 660px;
+    margin-bottom: 22px;
+    padding: 20px clamp(18px, 3vw, 26px);
+    border: 1px solid rgba(169,134,60,0.5);
+    border-left: 3px solid var(--gold);
+  }
+  .bundle b { font-family: var(--display); text-transform: uppercase; font-size: 1.05rem; font-weight: 700; }
+
+  .fine-print {
+    max-width: 60ch;
+    font-size: 0.88rem;
+    color: var(--on-ink-dim);
+  }
+
+  /* ---------- REGISTER ---------------------------------------- */
+
+  .register { max-width: 560px; }
+  .register .plate-in { padding: clamp(24px, 4vw, 34px); }
+
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .field label span { font-weight: 400; color: var(--on-paper-dim); }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid rgba(32,29,22,0.3);
+    padding: 11px 13px;
+    appearance: none;
+  }
+  .field select {
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+    background-position: calc(100% - 18px) center, calc(100% - 13px) center;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+  }
+  .field textarea { resize: vertical; min-height: 4.5em; }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus { border-color: var(--red); }
+
+  .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+  #regForm .cta { width: 100%; border: 0; font: inherit; font-weight: 700; cursor: pointer; }
+  #regForm .cta:disabled { opacity: 0.6; cursor: default; }
+
+  .reg-status {
+    min-height: 1.4em;
+    margin: 12px 0 0;
+    font-size: 0.88rem;
+    color: var(--red-d);
+    text-align: center;
+  }
+
+  .reg-done .plate-in { text-align: center; padding: clamp(30px, 5vw, 44px); }
+  .reg-done-title {
+    font-family: var(--display);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--red-d);
+  }
+
+  /* ---------- FOOTER ------------------------------------------ */
+
+  footer {
+    background: var(--ink-3);
+    color: var(--on-ink-dim);
+    padding: clamp(44px, 7vw, 64px) var(--gutter);
+    text-align: center;
+    font-size: 0.92rem;
+  }
+  footer .wrap { padding: 0; }
+  footer .suit-rule { color: var(--gold-lt); margin-top: 0; }
+  footer p { max-width: 52ch; margin-left: auto; margin-right: auto; }
+  footer a { color: var(--gold-lt); text-underline-offset: 3px; }
+
+  /* ---------- LIGHTBOX ---------------------------------------- */
+
+  .lightbox {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    max-width: 96vw;
+    max-height: 96vh;
+    overflow: visible;
+  }
+  .lightbox::backdrop { background: rgba(23,20,15,0.94); }
+  .lightbox img {
+    display: block;
+    max-width: 96vw;
+    max-height: 88vh;
+    width: auto;
+    border: 3px solid var(--paper);
+  }
+  .lightbox-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--red);
+    color: var(--paper);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .choice-field { border: 0; padding: 0; margin: 0 0 16px; }
+  .choice-field legend {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .choice-toggle {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+    gap: 8px;
+  }
+  .choice-toggle input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .choice-toggle label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    text-align: center;
+    padding: 9px 6px;
+    border: 1px solid rgba(32,29,22,0.25);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.78rem;
+    line-height: 1.2;
+    background: var(--paper);
+    transition: border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .choice-icon { font-size: 1.15rem; line-height: 1; }
+
+  .choice-toggle input:checked + label {
+    border-color: var(--red);
+    background: rgba(163,42,38,0.08);
+    box-shadow: inset 0 0 0 1px var(--red);
+  }
+  .choice-toggle label:active { transform: scale(0.97); }
+
+  .payment-note {
+    margin: 10px 0 0;
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    color: var(--ink);
+    background: rgba(163,42,38,0.08);
+    border-left: 3px solid var(--red);
+  }
+  .payment-note:empty { display: none; }
+
+  .choice-other {
+    margin-top: 8px;
+    width: 100%;
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    border: 1px solid rgba(32,29,22,0.3);
+    background: var(--paper);
+  }
+  .choice-other:focus { outline: none; border-color: var(--red); }
+
+  /* ---------- RESPONSIVE -------------------------------------- */
+
+  @media (max-width: 720px) {
+    .about { grid-template-columns: 1fr; }
+    .about-art { max-width: 230px; margin-inline: auto; }
+  }
+
+  @media (max-width: 520px) {
+    .stub { display: block; }
+    .stub div + div { border-left: 0; border-top: 1px dashed rgba(32,29,22,0.35); }
+    .rung { grid-template-columns: 20px 1fr auto; row-gap: 4px; }
+    .rung-dots { display: none; }
+    .countdown-grid i { display: none; }
+  }
+
+  /* ---------- MOTION ------------------------------------------ */
+
+  @media (prefers-reduced-motion: no-preference) {
+    .poster { animation: deal 620ms cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+    .countdown { animation: deal 620ms cubic-bezier(0.2, 0.7, 0.3, 1) 180ms both; }
+    @keyframes deal {
+      from { opacity: 0; transform: translateY(16px) scale(0.985); }
+      to   { opacity: 1; transform: none; }
+    }
+  }

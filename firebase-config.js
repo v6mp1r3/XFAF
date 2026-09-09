@@ -6,6 +6,13 @@
 //
 // Replace the six REPLACE_ME values with the config object Firebase
 // shows you under Project settings -> General -> Your apps -> (web app).
+//
+// This file loads as a plain <script src="firebase-config.js">, not a
+// JS module — an `import` statement here is a syntax error that stops
+// the whole file from running, so window.XFAF_FIREBASE_CONFIG never
+// gets set and registrations/login silently stop working. index.html
+// and xfaf-organizatori/index.html already load the Firebase SDK and
+// call firebase.initializeApp(...) themselves — don't call it here too.
 window.XFAF_FIREBASE_CONFIG = {
   apiKey: "AIzaSyC-n2vAqtb2s3LD9I76Jt0HRYg3icDfu6I",
   authDomain: "xfaf-9bda7.firebaseapp.com",

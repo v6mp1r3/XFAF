@@ -3,801 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>xFAF: Casino Royale &#8212; April 25</title>
-<meta name="description" content="Casino Royale is the spring xFAF party: April 25 at Pensiunea Vaca&#539;a della Nonna. Poker, blackjack, a cocktail bar, Beerlympics and karaoke until morning. Seats from 400 lei.">
+<title>Spring xFAF 2026 &#8212; Royal Casino</title>
+<meta name="description" content="Spring xFAF 2026: Royal Casino, the spring xFAF party at Pensiunea Vaca&#539;a della Nonna. Poker, blackjack, a cocktail bar, Beerlympics and karaoke until morning.">
 <meta name="theme-color" content="#14182C">
 <meta property="og:type" content="website">
-<meta property="og:title" content="xFAF: Casino Royale">
-<meta property="og:description" content="April 25, Pensiunea Vaca&#539;a della Nonna. The deck is shuffled and the stakes are high.">
+<meta property="og:title" content="Spring xFAF 2026 — Royal Casino">
+<meta property="og:description" content="Pensiunea Vaca&#539;a della Nonna. The deck is shuffled and the stakes are high.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2314182C'/%3E%3Ctext x='32' y='47' font-size='42' text-anchor='middle' fill='%23CE3327'%3E%E2%99%A0%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..900&family=Archivo:wght@400..700&display=swap" rel="stylesheet">
-<style>
-  /* ============================================================
-     xFAF: Casino Royale
-     The palette, the rules and the frames below are sampled from
-     the three printed plates on this page (agenda, map, bar menu)
-     so the page reads as one more sheet from the same press.
-     ============================================================ */
-
-  :root {
-    --stock:      #F2EDE1;  /* poster card stock */
-    --stock-2:    #E6DECA;  /* half-tone of the stock */
-    --ink:        #14182C;  /* poster ink */
-    --ink-2:      #1D2340;  /* raised ink, for panels */
-    --ink-3:      #0D1020;  /* deepest ink, for the footer */
-    --vermilion:  #CE3327;  /* the card red off the plates */
-    --vermilion-d:#A62A21;  /* same red, safe at small sizes */
-    --brass:      #B08F4F;  /* hairline gold */
-    --brass-lt:   #D8B876;  /* brass on ink */
-    --on-ink-dim: #B9B2A0;
-    --on-stock-dim: #5C5847;
-
-    --measure: 66ch;
-    --gutter: clamp(20px, 5vw, 40px);
-
-    --serif: 'Bodoni Moda', 'Didot', Georgia, serif;
-    --sans: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  * { box-sizing: border-box; }
-
-  html {
-    scroll-behavior: smooth;
-    -webkit-text-size-adjust: 100%;
-  }
-
-  body {
-    margin: 0;
-    background: var(--stock);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-size: 1.0625rem;
-    line-height: 1.62;
-    -webkit-font-smoothing: antialiased;
-    /* Bodoni's hairlines vanish at small sizes; let the opsz axis
-       thicken them wherever the serif is set below display size */
-    font-optical-sizing: auto;
-  }
-
-  h1, h2, h3 {
-    font-family: var(--serif);
-    margin: 0 0 0.4em;
-    line-height: 1.08;
-    text-wrap: balance;
-  }
-
-  p { margin: 0 0 1em; }
-  p:last-child { margin-bottom: 0; }
-  a { color: inherit; }
-  img { max-width: 100%; }
-
-  :focus-visible {
-    outline: 2px solid var(--vermilion);
-    outline-offset: 3px;
-    border-radius: 2px;
-  }
-  .on-ink :focus-visible,
-  .site-nav :focus-visible,
-  .hero :focus-visible { outline-color: var(--brass-lt); }
-
-  .skip-link {
-    position: absolute;
-    left: -9999px;
-    top: 8px;
-    background: var(--stock);
-    color: var(--ink);
-    padding: 10px 18px;
-    font-weight: 700;
-    z-index: 100;
-  }
-  .skip-link:focus { left: 12px; }
-
-  .wrap {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 var(--gutter);
-  }
-
-  section { padding: clamp(54px, 9vw, 92px) 0; }
-  section[id], .sheet[id] { scroll-margin-top: 84px; }
-
-  .on-ink { background: var(--ink); color: var(--stock); }
-  .on-ink .lede { color: var(--on-ink-dim); }
-  .lede { color: var(--on-stock-dim); max-width: 54ch; }
-
-  /* ---------- THE NOTCHED PLATE ------------------------------
-     The bar menu and agenda sheets are bordered by a heavy rule
-     with the corners cut away. Two stacked clip-paths give the
-     rule an even thickness all the way round the notch.
-     --------------------------------------------------------- */
-
-  .plate {
-    background: var(--brass);
-    padding: 2px;
-    clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px),
-                       calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px), 0 16px);
-  }
-  .plate-in {
-    position: relative;
-    background: var(--stock);
-    padding: clamp(20px, 4vw, 34px);
-    clip-path: polygon(15px 0, calc(100% - 15px) 0, 100% 15px, 100% calc(100% - 15px),
-                       calc(100% - 15px) 100%, 15px 100%, 0 calc(100% - 15px), 0 15px);
-  }
-  /* the thin inner rule that sits just inside the heavy one */
-  .plate-in::before {
-    content: '';
-    position: absolute;
-    inset: 9px;
-    border: 1px solid rgba(176, 143, 79, 0.55);
-    pointer-events: none;
-  }
-  .plate-in > * { position: relative; }
-
-  /* ---------- SUIT RULE --------------------------------------
-     rule / spade diamond heart club / rule, straight off the
-     agenda sheet. Used once in the hero and once in the footer.
-     --------------------------------------------------------- */
-
-  .suit-rule {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 20px 0 22px;
-    color: var(--ink);
-  }
-  .suit-rule::before,
-  .suit-rule::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: currentColor;
-    opacity: 0.45;
-  }
-  .suit-rule b {
-    font-size: 0.95rem;
-    letter-spacing: 0.55em;
-    padding-left: 0.55em;
-    font-weight: 400;
-  }
-  .suit-rule .r { color: var(--vermilion); }
-
-  /* ---------- NAV --------------------------------------------- */
-
-  .site-nav {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: var(--ink);
-    border-bottom: 1px solid rgba(176, 143, 79, 0.35);
-  }
-  .nav-inner {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 11px var(--gutter);
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--serif);
-    font-weight: 900;
-    font-size: 1.15rem;
-    color: var(--stock);
-    text-decoration: none;
-    flex-shrink: 0;
-    letter-spacing: 0.01em;
-  }
-  .nav-brand i {
-    font-style: normal;
-    font-size: 0.62rem;
-    color: var(--vermilion);
-  }
-
-  .nav-scroll {
-    flex: 1;
-    min-width: 0;
-    position: relative;
-  }
-  .nav-links {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding: 4px 26px 4px 0;
-  }
-  .nav-links::-webkit-scrollbar { display: none; }
-  .nav-scroll::after {
-    content: '';
-    position: absolute;
-    inset: 0 0 0 auto;
-    width: 26px;
-    background: linear-gradient(to right, rgba(20,24,44,0), var(--ink));
-    pointer-events: none;
-  }
-  .nav-links a {
-    color: var(--on-ink-dim);
-    text-decoration: none;
-    font-size: 0.875rem;
-    white-space: nowrap;
-    padding-bottom: 3px;
-    border-bottom: 2px solid transparent;
-  }
-  .nav-links a:hover { color: var(--stock); }
-  .nav-links a[aria-current] {
-    color: var(--stock);
-    border-bottom-color: var(--vermilion);
-  }
-
-  .nav-cta {
-    flex-shrink: 0;
-    background: var(--brass);
-    color: var(--ink);
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.85rem;
-    padding: 8px 17px;
-  }
-  .nav-cta:hover { background: var(--brass-lt); }
-
-  /* ---------- HERO -------------------------------------------- */
-
-  .hero {
-    background:
-      repeating-linear-gradient(45deg, rgba(176,143,79,0.05) 0 2px, transparent 2px 11px),
-      repeating-linear-gradient(-45deg, rgba(176,143,79,0.05) 0 2px, transparent 2px 11px),
-      var(--ink);
-    padding: clamp(34px, 6vw, 64px) var(--gutter) clamp(44px, 7vw, 76px);
-  }
-  .poster {
-    max-width: 660px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  .poster .plate-in { padding: clamp(26px, 4.5vw, 42px) clamp(22px, 5vw, 46px); }
-
-  .presenter {
-    font-size: 0.78rem;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--vermilion-d);
-    font-weight: 600;
-    margin-bottom: 18px;
-  }
-
-  .hero h1 {
-    font-size: clamp(2.8rem, 12vw, 5rem);
-    font-weight: 900;
-    letter-spacing: 0.005em;
-    margin: 0;
-  }
-  .hero h1 span { display: block; }
-
-  .hero .tagline {
-    font-size: 1.06rem;
-    color: var(--on-stock-dim);
-    max-width: 44ch;
-    margin: 0 auto;
-  }
-
-  /* the two-part ticket: date on one side, venue on the other */
-  .stub {
-    display: flex;
-    justify-content: center;
-    margin: 26px 0 28px;
-    border-top: 1px solid rgba(20,24,44,0.18);
-    border-bottom: 1px solid rgba(20,24,44,0.18);
-  }
-  .stub div {
-    padding: 15px 26px;
-    text-align: center;
-  }
-  .stub div + div { border-left: 1px dashed rgba(20,24,44,0.35); }
-  .stub b {
-    display: block;
-    font-family: var(--serif);
-    font-weight: 700;
-    font-size: 1.28rem;
-    line-height: 1.2;
-  }
-  .stub span {
-    display: block;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--on-stock-dim);
-    margin-top: 3px;
-  }
-
-  .cta {
-    display: inline-block;
-    background: var(--vermilion);
-    color: var(--stock);
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 1.02rem;
-    padding: 15px 34px;
-    border: 2px solid var(--vermilion);
-    transition: background 0.15s ease, color 0.15s ease;
-  }
-  .cta:hover { background: var(--vermilion-d); border-color: var(--vermilion-d); }
-
-  .cta-quiet {
-    display: block;
-    margin-top: 20px;
-    font-size: 0.9rem;
-    color: var(--on-stock-dim);
-    text-underline-offset: 4px;
-  }
-  .cta-quiet:hover { color: var(--vermilion-d); }
-
-  /* ---------- COUNTDOWN --------------------------------------- */
-
-  .countdown {
-    max-width: 660px;
-    margin: clamp(26px, 4vw, 40px) auto 0;
-    text-align: center;
-  }
-  .countdown-label {
-    font-size: 0.78rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--brass-lt);
-    margin-bottom: 12px;
-  }
-  .countdown-grid {
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    gap: clamp(12px, 4vw, 34px);
-  }
-  .countdown-grid div { min-width: 3.4ch; text-align: center; }
-  .countdown-grid b {
-    display: block;
-    font-family: var(--serif);
-    font-weight: 900;
-    font-size: clamp(1.9rem, 7vw, 2.9rem);
-    color: var(--stock);
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-  }
-  .countdown-grid span {
-    display: block;
-    font-size: 0.72rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--on-ink-dim);
-    margin-top: 7px;
-  }
-  .countdown-grid i {
-    font-style: normal;
-    color: var(--vermilion);
-    font-size: 0.55rem;
-    align-self: baseline;
-    transform: translateY(-0.9em);
-  }
-  .countdown.is-tonight .countdown-grid { display: none; }
-  .countdown-tonight {
-    display: none;
-    font-family: var(--serif);
-    font-weight: 700;
-    font-size: clamp(1.5rem, 5vw, 2.1rem);
-    color: var(--brass-lt);
-  }
-  .countdown.is-tonight .countdown-tonight { display: block; }
-
-  /* ---------- SECTION HEADS ----------------------------------
-     A brass hairline with the red lozenge sitting on it, then
-     the heading below. Taken from the top rule of the bar menu.
-     --------------------------------------------------------- */
-
-  .head { margin-bottom: clamp(26px, 4vw, 40px); }
-  .head-rule {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    color: var(--brass);
-  }
-  .head-rule::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: currentColor;
-    opacity: 0.6;
-  }
-  .lozenge {
-    flex-shrink: 0;
-    width: 26px;
-    height: 26px;
-    background: var(--vermilion);
-    transform: rotate(45deg);
-    display: grid;
-    place-items: center;
-  }
-  .lozenge span {
-    transform: rotate(-45deg);
-    color: var(--stock);
-    font-size: 0.82rem;
-    line-height: 1;
-  }
-  .head h2 {
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
-    font-weight: 700;
-    max-width: 20ch;
-  }
-
-  /* ---------- ABOUT ------------------------------------------- */
-
-  .about {
-    display: grid;
-    grid-template-columns: 1.4fr 0.9fr;
-    gap: clamp(28px, 5vw, 52px);
-    align-items: center;
-  }
-  .about p { max-width: var(--measure); }
-  .about-art { width: 100%; height: auto; display: block; }
-
-  /* ---------- MEDIA PLATES ------------------------------------ */
-
-  .plate-zoom {
-    display: block;
-    width: 100%;
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: zoom-in;
-    font: inherit;
-    color: inherit;
-  }
-  .plate-zoom img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-  .plate-note {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 14px;
-    margin-top: 12px;
-    font-size: 0.82rem;
-    color: var(--on-stock-dim);
-  }
-  .plate-note em { font-style: normal; color: var(--vermilion-d); }
-
-  .video-frame iframe {
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border: 0;
-    background: var(--ink-3);
-  }
-
-  /* the three printed sheets run as one passage, hairline-separated */
-  .sheet + .sheet {
-    margin-top: clamp(48px, 8vw, 80px);
-    padding-top: clamp(48px, 8vw, 80px);
-    border-top: 1px solid rgba(20,24,44,0.14);
-  }
-
-  /* ---------- GALLERY ----------------------------------------- */
-
-  .gallery { max-width: 720px; }
-  .gallery-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-bottom: 18px;
-  }
-  .gallery-top h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin: 0;
-    color: var(--stock);
-  }
-  .upload-btn {
-    background: none;
-    color: var(--brass-lt);
-    border: 1px solid var(--brass);
-    padding: 10px 20px;
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 0.88rem;
-    cursor: pointer;
-  }
-  .upload-btn:hover { background: var(--brass); color: var(--ink); }
-  #photoInput { display: none; }
-  #uploadStatus {
-    font-size: 0.85rem;
-    color: var(--on-ink-dim);
-    min-height: 1.4em;
-    margin: 0 0 14px;
-  }
-
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
-    gap: 12px;
-  }
-  .gallery-grid:empty { display: none; }
-  .gallery-grid img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    background: var(--ink-2);
-    border: 2px solid var(--stock);
-  }
-
-  /* the empty state is the invitation: blank prints waiting to be pinned up */
-  .gallery-empty {
-    display: flex;
-    gap: clamp(10px, 3vw, 26px);
-    padding: 12px 0 4px 10px;
-  }
-  .gallery-empty div {
-    width: clamp(78px, 22vw, 116px);
-    background: var(--stock);
-    padding: 8px 8px 26px;
-    box-shadow: 0 10px 24px -14px rgba(0,0,0,0.9);
-  }
-  .gallery-empty div::before {
-    content: '';
-    display: block;
-    aspect-ratio: 1;
-    background: var(--stock-2);
-  }
-  .gallery-empty div:nth-child(1) { transform: rotate(-6deg); }
-  .gallery-empty div:nth-child(2) { transform: rotate(1.5deg); }
-  .gallery-empty div:nth-child(3) { transform: rotate(7deg); }
-  .gallery-empty-note {
-    font-size: 0.88rem;
-    color: var(--on-ink-dim);
-    margin: 24px 0 0;
-  }
-
-  /* ---------- PRICE LADDER -----------------------------------
-     Set like the bar menu's price list: name, dotted leader,
-     figure. The row that matches today's date is called out.
-     --------------------------------------------------------- */
-
-  .ladder {
-    list-style: none;
-    margin: 0 0 clamp(28px, 4vw, 40px);
-    padding: 0;
-    max-width: 660px;
-  }
-  .rung {
-    display: grid;
-    grid-template-columns: 20px 1fr;
-    column-gap: 12px;
-    row-gap: 5px;
-    padding: 17px 14px;
-    border-bottom: 1px solid rgba(176,143,79,0.28);
-    border-left: 3px solid transparent;
-  }
-  .rung:first-child { border-top: 1px solid rgba(176,143,79,0.28); }
-  .rung-pip { color: var(--vermilion); font-size: 1.05rem; line-height: 1.3; }
-
-  /* the leader line: name ......................... figure */
-  .rung-line {
-    grid-column: 2;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    column-gap: 16px;
-    align-items: baseline;
-  }
-  .rung-name {
-    font-family: var(--serif);
-    font-weight: 700;
-    font-size: 1.2rem;
-    line-height: 1.2;
-  }
-  .rung-dots {
-    height: 0;
-    border-bottom: 2px dotted rgba(176,143,79,0.6);
-    transform: translateY(-5px);
-  }
-  .rung-price {
-    font-family: var(--serif);
-    font-weight: 900;
-    font-size: 1.75rem;
-    line-height: 1;
-    white-space: nowrap;
-  }
-  .rung-price span {
-    font-family: var(--sans);
-    font-weight: 400;
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-  }
-
-  .rung-meta {
-    grid-column: 2;
-    font-size: 0.82rem;
-    letter-spacing: 0.02em;
-    color: var(--on-ink-dim);
-  }
-  .rung-tag {
-    display: none;
-    margin-left: 10px;
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 700;
-    padding: 3px 8px;
-    vertical-align: 1px;
-  }
-  .rung.is-now { background: rgba(242,237,225,0.07); border-left-color: var(--vermilion); }
-  .rung.is-now .rung-tag {
-    display: inline-block;
-    background: var(--vermilion);
-    color: var(--stock);
-  }
-  .rung.is-next .rung-tag {
-    display: inline-block;
-    border: 1px solid var(--brass);
-    color: var(--brass-lt);
-  }
-  .rung.is-past { opacity: 0.45; }
-  .rung.is-past .rung-price { text-decoration: line-through; text-decoration-thickness: 2px; }
-
-  .bundle {
-    max-width: 660px;
-    margin-bottom: 22px;
-    padding: 20px clamp(18px, 3vw, 26px);
-    border: 1px solid rgba(176,143,79,0.45);
-    border-left: 3px solid var(--brass);
-  }
-  .bundle b { font-family: var(--serif); font-size: 1.12rem; font-weight: 700; }
-
-  .fine-print {
-    max-width: 60ch;
-    font-size: 0.88rem;
-    color: var(--on-ink-dim);
-  }
-
-  /* ---------- REGISTER ---------------------------------------- */
-
-  .register { max-width: 560px; }
-  .register .plate-in { padding: clamp(24px, 4vw, 34px); }
-
-  .field { margin-bottom: 18px; }
-  .field label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .field label span { font-weight: 400; color: var(--on-stock-dim); }
-  .field input,
-  .field select,
-  .field textarea {
-    width: 100%;
-    font: inherit;
-    font-size: 1rem;
-    color: var(--ink);
-    background: var(--stock);
-    border: 1px solid rgba(20,24,44,0.3);
-    padding: 11px 13px;
-    appearance: none;
-  }
-  .field select {
-    background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
-    background-position: calc(100% - 18px) center, calc(100% - 13px) center;
-    background-size: 5px 5px, 5px 5px;
-    background-repeat: no-repeat;
-  }
-  .field textarea { resize: vertical; min-height: 4.5em; }
-  .field input:focus,
-  .field select:focus,
-  .field textarea:focus { border-color: var(--vermilion); }
-
-  .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-
-  #regForm .cta { width: 100%; border: 0; font: inherit; font-weight: 700; cursor: pointer; }
-  #regForm .cta:disabled { opacity: 0.6; cursor: default; }
-
-  .reg-status {
-    min-height: 1.4em;
-    margin: 12px 0 0;
-    font-size: 0.88rem;
-    color: var(--vermilion-d);
-    text-align: center;
-  }
-
-  .reg-done .plate-in { text-align: center; padding: clamp(30px, 5vw, 44px); }
-  .reg-done-title {
-    font-family: var(--serif);
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: var(--vermilion-d);
-  }
-
-  /* ---------- FOOTER ------------------------------------------ */
-
-  footer {
-    background: var(--ink-3);
-    color: var(--on-ink-dim);
-    padding: clamp(44px, 7vw, 64px) var(--gutter);
-    text-align: center;
-    font-size: 0.92rem;
-  }
-  footer .wrap { padding: 0; }
-  footer .suit-rule { color: var(--brass-lt); margin-top: 0; }
-  footer p { max-width: 52ch; margin-left: auto; margin-right: auto; }
-  footer a { color: var(--brass-lt); text-underline-offset: 3px; }
-
-  /* ---------- LIGHTBOX ---------------------------------------- */
-
-  .lightbox {
-    border: 0;
-    padding: 0;
-    background: transparent;
-    max-width: 96vw;
-    max-height: 96vh;
-    overflow: visible;
-  }
-  .lightbox::backdrop { background: rgba(13,16,32,0.94); }
-  .lightbox img {
-    display: block;
-    max-width: 96vw;
-    max-height: 88vh;
-    width: auto;
-    border: 3px solid var(--stock);
-  }
-  .lightbox-close {
-    position: absolute;
-    top: -14px;
-    right: -14px;
-    width: 40px;
-    height: 40px;
-    border: 0;
-    border-radius: 50%;
-    background: var(--vermilion);
-    color: var(--stock);
-    font-size: 1.3rem;
-    line-height: 1;
-    cursor: pointer;
-  }
-
-  /* ---------- RESPONSIVE -------------------------------------- */
-
-  @media (max-width: 720px) {
-    .about { grid-template-columns: 1fr; }
-    .about-art { max-width: 230px; margin-inline: auto; }
-  }
-
-  @media (max-width: 520px) {
-    .stub { display: block; }
-    .stub div + div { border-left: 0; border-top: 1px dashed rgba(20,24,44,0.35); }
-    .rung { grid-template-columns: 20px 1fr auto; row-gap: 4px; }
-    .rung-dots { display: none; }
-    .countdown-grid i { display: none; }
-  }
-
-  /* ---------- MOTION ------------------------------------------
-     One reveal, on load, on the poster only. Nothing else moves
-     unless somebody asks it to.
-     --------------------------------------------------------- */
-
-  @media (prefers-reduced-motion: no-preference) {
-    .poster { animation: deal 620ms cubic-bezier(0.2, 0.7, 0.3, 1) both; }
-    .countdown { animation: deal 620ms cubic-bezier(0.2, 0.7, 0.3, 1) 180ms both; }
-    @keyframes deal {
-      from { opacity: 0; transform: translateY(16px) scale(0.985); }
-      to   { opacity: 1; transform: none; }
-    }
-  }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -827,7 +43,7 @@
   <div class="poster">
     <div class="plate">
       <div class="plate-in">
-        <p class="presenter">The xFAF spring tradition</p>
+        <p class="presenter">The xFAF spring tradition &#183; 2026</p>
         <h1><span>Casino</span><span>Royale</span></h1>
         <div class="suit-rule" aria-hidden="true">
           <b>&#9824;<span class="r">&#9830;</span><span class="r">&#9829;</span>&#9827;</b>
@@ -855,6 +71,7 @@
       <div><b id="cdSecs">&#8212;</b><span>secs</span></div>
     </div>
     <p class="countdown-tonight">The tables are open. See you there.</p>
+    <p class="countdown-unset">Date to be announced &#8212; check back soon.</p>
   </div>
 </header>
 
@@ -1057,12 +274,64 @@
         <div class="plate-in">
           <div class="field">
             <label for="regName">Full name</label>
-            <input type="text" id="regName" name="name" autocomplete="name" required maxlength="120">
+            <input type="text" id="regName" name="name" autocomplete="name" required maxlength="120" placeholder="Gogoi Elena">
           </div>
           <div class="field">
-            <label for="regContact">Email or phone</label>
-            <input type="text" id="regContact" name="contact" autocomplete="email" required maxlength="120">
+            <label for="regGroup">Group</label>
+            <input type="text" id="regGroup" name="group" autocomplete="organization" required maxlength="120" placeholder="FAF-131">
           </div>
+          <div class="field">
+            <label for="regContact">Telegram</label>
+            <input type="text" id="regContact" name="contact" autocomplete="email" required maxlength="120" placeholder="@username or +373xx xxx xxx">
+          </div>
+          <fieldset class="choice-field">
+            <legend>Would you like to participate in Beerlympics?🍻</legend>
+            <div class="choice-toggle">
+              <input type="radio" id="beerYes" name="beer" value="yes" checked>
+              <label for="beerYes">
+                <span class="choice-icon">🏆</span>
+                Yes, I want to compete
+              </label>
+
+              <input type="radio" id="beerNo" name="beer" value="no">
+              <label for="beerNo">
+                <span class="beer-icon">🍿</span>
+                No, I just want to watch
+              </label>
+            </div>
+          </fieldset>
+          
+          <fieldset class="choice-field">
+            <legend>Will you stay for the night? 🌙</legend>
+            <div class="choice-toggle">
+              <input type="radio" id="stayYes" name="stay" value="yes" checked>
+              <label for="stayYes"><span class="choice-icon">🛏️</span>Yes, I'll stay</label>
+
+              <input type="radio" id="stayNo" name="stay" value="no">
+              <label for="stayNo"><span class="choice-icon">🚗</span>No, I'll leave</label>
+            </div>
+          </fieldset>
+
+          <fieldset class="choice-field">
+            <legend>Food preferences 🍽️</legend>
+            <div class="choice-toggle">
+              <input type="radio" id="foodNone" name="food" value="none" checked>
+              <label for="foodNone"><span class="choice-icon">🍽️</span>None</label>
+
+              <input type="radio" id="foodVeg" name="food" value="vegetarian">
+              <label for="foodVeg"><span class="choice-icon">🥦</span>Vegetarian</label>
+
+              <input type="radio" id="foodVegan" name="food" value="vegan">
+              <label for="foodVegan"><span class="choice-icon">🌱</span>Vegan</label>
+
+              <input type="radio" id="foodOther" name="food" value="other">
+              <label for="foodOther"><span class="choice-icon">✏️</span>Other</label>
+            </div>
+
+            <input type="text" id="foodOtherText" class="choice-other"
+                  placeholder="Tell us what you'd like..." maxlength="80" hidden>
+          </fieldset>
+          <!--
           <div class="field">
             <label for="regPeople">Coming with</label>
             <select id="regPeople" name="people">
@@ -1073,6 +342,20 @@
               <option value="5+">5 or more</option>
             </select>
           </div>
+        -->
+
+          <fieldset class="choice-field">
+            <legend>Method to pay</legend>
+            <div class="choice-toggle">
+              <input type="radio" id="payCash" name="payment" value="cash" checked>
+              <label for="payCash"><span class="choice-icon">💵</span>Cash</label>
+
+              <input type="radio" id="payCard" name="payment" value="card">
+              <label for="payCard"><span class="choice-icon">💳</span>Card</label>
+            </div>
+            <p class="payment-note" id="paymentNote" role="status"></p>
+          </fieldset>
+
           <div class="field">
             <label for="regNote">Anything we should know? <span>(optional)</span></label>
             <textarea id="regNote" name="note" rows="2" maxlength="300"></textarea>
@@ -1109,331 +392,14 @@
   <img id="lightboxImg" alt="">
 </dialog>
 
+<script>
+  window.XFAF_EVENT_ID = 'spring-2026';
+  window.XFAF_DEFAULT_DATE = '2027-04-25T16:00:00';
+</script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<script src="firebase-config.js"></script>
-
-<script>
-  /* ---- Firebase (event settings + registrations) -----------------
-     firebase-config.js is a shared, non-secret project id; until it
-     is filled in the site just keeps showing its static defaults */
-  let db = null;
-  try {
-    const cfg = window.XFAF_FIREBASE_CONFIG;
-    if (window.firebase && cfg && cfg.apiKey && cfg.apiKey.indexOf('REPLACE_ME') === -1) {
-      firebase.initializeApp(cfg);
-      db = firebase.firestore();
-    }
-  } catch (err) {
-    db = null;
-  }
-
-  /* ---- countdown -------------------------------------------------
-     default event date; an organizer's saved settings can replace it */
-  let eventDate = new Date('2027-04-25T16:00:00');
-  let countdownTimer = null;
-
-  const countdown = document.getElementById('countdown');
-  const cd = {
-    days: document.getElementById('cdDays'),
-    hours: document.getElementById('cdHours'),
-    mins: document.getElementById('cdMins'),
-    secs: document.getElementById('cdSecs')
-  };
-
-  function updateCountdown() {
-    const diff = eventDate - new Date();
-    if (diff <= 0) {
-      countdown.classList.add('is-tonight');
-      return true;
-    }
-    countdown.classList.remove('is-tonight');
-    cd.days.textContent = Math.floor(diff / 86400000);
-    cd.hours.textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
-    cd.mins.textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
-    cd.secs.textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
-    return false;
-  }
-  function startCountdown() {
-    if (countdownTimer) clearInterval(countdownTimer);
-    if (!updateCountdown()) {
-      countdownTimer = setInterval(function () {
-        if (updateCountdown()) clearInterval(countdownTimer);
-      }, 1000);
-    }
-  }
-  startCountdown();
-
-  /* ---- mark the price that applies today ------------------------
-     the windows share the event's year, so moving the edition only
-     means changing eventDate; callable again after settings load */
-  function markTierPricing() {
-    const year = eventDate.getFullYear();
-    const today = new Date();
-    const rungs = [].slice.call(document.querySelectorAll('#ladder .rung'));
-    let live = null;
-    let next = null;
-
-    rungs.forEach(function (rung) {
-      rung.classList.remove('is-now', 'is-past', 'is-next');
-      rung.querySelector('.rung-tag').textContent = '';
-      const from = new Date(year + '-' + rung.dataset.from + 'T00:00:00');
-      const to = new Date(year + '-' + rung.dataset.to + 'T23:59:59');
-      if (today > to) rung.classList.add('is-past');
-      else if (today >= from) live = rung;
-      else if (!next) next = rung;
-    });
-
-    if (live) {
-      live.classList.add('is-now');
-      live.querySelector('.rung-tag').textContent = "Today's price";
-    } else if (next) {
-      // no window is open yet, so say when the cheapest seat goes on sale
-      next.classList.add('is-next');
-      next.querySelector('.rung-tag').textContent = 'Opens ' + next.dataset.opens;
-    }
-  }
-  markTierPricing();
-
-  /* ---- organizer-edited event settings ---------------------------
-     progressive enhancement: the page above already renders and
-     works from its static defaults; this only patches it if the
-     organizer has saved something at /xfaf-organizatori          */
-  async function loadEventSettings() {
-    if (!db) return;
-    try {
-      const snap = await db.collection('settings').doc('event').get();
-      if (!snap.exists) return;
-      const s = snap.data() || {};
-
-      if (s.eventDate) {
-        const parsed = new Date(s.eventDate);
-        if (!isNaN(parsed)) { eventDate = parsed; startCountdown(); }
-      }
-      setText('heroDate', s.dateLabel);
-      setText('heroDateSub', s.dateSub);
-      setText('heroVenue', s.venueName);
-      setText('heroVenueSub', s.venueSub);
-      setText('bundleHeadline', s.bundleHeadline);
-      setText('bundleNote', s.bundleNote);
-      setText('finePrint', s.finePrint);
-
-      if (Array.isArray(s.tiers)) {
-        const rungs = document.querySelectorAll('#ladder .rung');
-        s.tiers.forEach(function (t, i) {
-          const rung = rungs[i];
-          if (!rung || !t) return;
-          if (t.name) rung.querySelector('.rung-name').textContent = t.name;
-          if (t.price != null) rung.querySelector('.rung-price').firstChild.nodeValue = t.price + ' ';
-          if (t.dateLabel) rung.querySelector('.rung-meta').firstChild.nodeValue = t.dateLabel;
-          if (t.from) rung.dataset.from = t.from;
-          if (t.to) rung.dataset.to = t.to;
-          if (t.opens) rung.dataset.opens = t.opens;
-        });
-        markTierPricing();
-      }
-    } catch (err) {
-      // Firestore unreachable, or nothing saved yet — keep the defaults
-    }
-  }
-  function setText(id, value) {
-    if (!value) return;
-    const el = document.getElementById(id);
-    if (el) el.textContent = value;
-  }
-  loadEventSettings();
-
-  /* ---- registration form ------------------------------------------
-     writes straight to Firestore; the organizer dashboard at
-     /xfaf-organizatori reads the same "registrations" collection */
-  (function () {
-    const regForm = document.getElementById('regForm');
-    if (!regForm) return;
-    const regStatus = document.getElementById('regStatus');
-    const regSubmit = document.getElementById('regSubmit');
-    const regDone = document.getElementById('regDone');
-
-    function currentTierName() {
-      const now = document.querySelector('#ladder .rung.is-now .rung-name');
-      return now ? now.textContent.trim() : '';
-    }
-
-    regForm.addEventListener('submit', async function (e) {
-      e.preventDefault();
-      if (document.getElementById('regHoneypot').value) return; // a bot filled the hidden field
-
-      const name = document.getElementById('regName').value.trim();
-      const contact = document.getElementById('regContact').value.trim();
-      const people = document.getElementById('regPeople').value;
-      const note = document.getElementById('regNote').value.trim();
-
-      if (!name || !contact) {
-        regStatus.textContent = 'Please fill in your name and a way to reach you.';
-        return;
-      }
-      if (!db) {
-        regStatus.textContent = 'Registration isn’t connected yet — please try again later or reach us on Telegram.';
-        return;
-      }
-
-      regSubmit.disabled = true;
-      regStatus.textContent = 'Saving your seat…';
-      try {
-        await db.collection('registrations').add({
-          name: name,
-          contact: contact,
-          people: people,
-          note: note,
-          tier: currentTierName(),
-          status: 'new',
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        document.getElementById('regDoneName').textContent = name.split(' ')[0] || name;
-        regForm.hidden = true;
-        regDone.hidden = false;
-      } catch (err) {
-        regStatus.textContent = 'That did not go through — check your connection and try again.';
-        regSubmit.disabled = false;
-      }
-    });
-  })();
-
-  /* ---- nav: underline the section you're reading ---------------- */
-  (function () {
-    const links = new Map();
-    document.querySelectorAll('.nav-links a').forEach(function (a) {
-      const el = document.querySelector(a.getAttribute('href'));
-      if (el) links.set(el, a);
-    });
-    const seen = new Set();
-    const io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) seen.add(e.target); else seen.delete(e.target);
-      });
-      links.forEach(function (a) { a.removeAttribute('aria-current'); });
-      const first = [...links.keys()].find(function (el) { return seen.has(el); });
-      if (first) links.get(first).setAttribute('aria-current', 'true');
-    }, { rootMargin: '-66px 0px -55% 0px' });
-    links.forEach(function (_, el) { io.observe(el); });
-  })();
-
-  /* ---- enlarge the printed sheets ------------------------------- */
-  (function () {
-    const box = document.getElementById('lightbox');
-    const shown = document.getElementById('lightboxImg');
-    if (!box || typeof box.showModal !== 'function') return;
-    document.querySelectorAll('.plate-zoom').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        const pic = btn.querySelector('img');
-        shown.src = pic.src;
-        shown.alt = pic.alt;
-        box.showModal();
-      });
-    });
-    document.getElementById('lightboxClose').addEventListener('click', function () { box.close(); });
-    box.addEventListener('click', function (e) { if (e.target === box) box.close(); });
-    box.addEventListener('close', function () { shown.removeAttribute('src'); });
-  })();
-
-  /* ---- photo gallery -------------------------------------------
-     window.storage is shared between everyone when the page runs
-     on a host that provides it; on a plain file it falls back to
-     this browser only, so the pictures at least survive a reload */
-  const store = (window.storage && typeof window.storage.set === 'function')
-    ? window.storage
-    : {
-        list: async function (prefix) {
-          return { keys: Object.keys(localStorage).filter(function (k) { return k.indexOf(prefix) === 0; }).sort() };
-        },
-        get: async function (key) {
-          const value = localStorage.getItem(key);
-          return value === null ? null : { value: value };
-        },
-        set: async function (key, value) { localStorage.setItem(key, value); }
-      };
-
-  const MAX_WIDTH = 900;
-  const galleryGrid = document.getElementById('galleryGrid');
-  const galleryEmpty = document.getElementById('galleryEmpty');
-  const photoInput = document.getElementById('photoInput');
-  const uploadBtn = document.getElementById('uploadBtn');
-  const uploadStatus = document.getElementById('uploadStatus');
-
-  uploadBtn.addEventListener('click', function () { photoInput.click(); });
-
-  // make the picture smaller so it saves fast
-  function shrinkImage(file) {
-    return new Promise(function (resolve, reject) {
-      const reader = new FileReader();
-      reader.onload = function () {
-        const img = new Image();
-        img.onload = function () {
-          let w = img.width;
-          let h = img.height;
-          if (w > MAX_WIDTH) {
-            h = Math.round(h * (MAX_WIDTH / w));
-            w = MAX_WIDTH;
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = w;
-          canvas.height = h;
-          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL('image/jpeg', 0.6));
-        };
-        img.onerror = reject;
-        img.src = reader.result;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  function addPhotoToGrid(dataUrl) {
-    const pic = document.createElement('img');
-    pic.src = dataUrl;
-    pic.alt = 'Photo from the party';
-    galleryGrid.appendChild(pic);
-    galleryEmpty.hidden = true;
-  }
-
-  async function loadGallery() {
-    try {
-      const listResult = await store.list('photo:', true);
-      const keys = listResult ? listResult.keys : [];
-      if (!keys || keys.length === 0) return;
-      for (const key of keys) {
-        try {
-          const item = await store.get(key, true);
-          if (item) addPhotoToGrid(item.value);
-        } catch (err) {
-          // skip a photo that did not load
-        }
-      }
-    } catch (err) {
-      // nothing saved yet, keep the empty state showing
-    }
-  }
-
-  photoInput.addEventListener('change', async function () {
-    const file = photoInput.files[0];
-    if (!file) return;
-    uploadStatus.textContent = 'Adding your photo…';
-    try {
-      const smallPic = await shrinkImage(file);
-      const key = 'photo:' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
-      await store.set(key, smallPic, true);
-      addPhotoToGrid(smallPic);
-      uploadStatus.textContent = 'Added, thanks for sharing.';
-    } catch (err) {
-      uploadStatus.textContent = (err && err.name === 'QuotaExceededError')
-        ? 'There is no room left to save photos on this device.'
-        : 'That photo would not save. Try a different one.';
-    }
-    photoInput.value = '';
-  });
-
-  loadGallery();
-</script>
+<script src="../firebase-config.js"></script>
+<script src="../script.js"></script>
 
 </body>
 </html>
