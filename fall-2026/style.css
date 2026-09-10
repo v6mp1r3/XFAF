@@ -91,7 +91,7 @@
   .section-tight { padding-top: 0; }
 
   /* ---------- THE DECREE FRAME --------------------------------
-     A heavy ink border with a thin red rule just inside it — the
+     A heavy ink border with a thin red rule just inside it - the
      look of an official seal or certificate, sharp square corners
      rather than the Casino edition's notched playing-card frame.
      --------------------------------------------------------- */
@@ -105,7 +105,7 @@
   }
 
   /* ---------- STAR RULE ----------------------------------------
-     rule / star / rule — one star standing in for the four suits.
+     rule / star / rule - one star standing in for the four suits.
      Used once in the hero and once in the footer.
      --------------------------------------------------------- */
 
@@ -422,6 +422,70 @@
   .about p { max-width: var(--measure); }
   .about-art { width: 100%; height: auto; display: block; }
 
+  /* ---------- ORGANISERS ---------------------------------------- */
+
+  /* flexbox rather than grid: each wrapped line centers on its own,
+     so 5 cards naturally sit 3 over 2 without an empty gap */
+  .team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 16px;
+    max-width: 640px;
+    margin: 0 auto 36px;
+  }
+  .team-card { flex: 0 1 160px; text-align: center; }
+  .team-card.plate .plate-in { padding: 22px 14px 18px; }
+  .team-photo {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: var(--paper-2);
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .team-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .team-photo svg { width: 34px; height: 34px; color: var(--on-paper-dim); }
+  .team-name {
+    font-family: var(--display);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 0.95rem;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  /* a card can stand out a size up once it has a real photo */
+  .team-card-lg { flex: 0 1 190px; }
+  .team-card-lg .plate-in { padding: 18px 14px 18px; }
+  .team-card-lg .team-photo { width: 132px; height: 132px; border-width: 3px; }
+  .team-card-lg .team-photo svg { width: 58px; height: 58px; }
+  .team-card-lg .team-name { font-size: 1.1rem; }
+
+  .team-social {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .team-social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--gold-lt);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .team-social-link:hover { background: var(--red); color: var(--paper); }
+  .team-social-link svg { width: 14px; height: 14px; }
+
   /* ---------- MEDIA PLATES / PLACEHOLDERS ---------------------- */
 
   .plate-zoom {
@@ -449,6 +513,14 @@
     color: var(--on-paper-dim);
   }
   .plate-note em { font-style: normal; color: var(--red-d); }
+
+  .video-frame iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    background: var(--ink-3);
+  }
 
   /* a section whose real content hasn't been announced yet */
   .tbd-card {
@@ -488,6 +560,7 @@
     margin: 0;
     color: var(--paper);
   }
+  .gallery-top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .upload-btn {
     background: none;
     color: var(--gold-lt);
@@ -499,6 +572,18 @@
     cursor: pointer;
   }
   .upload-btn:hover { background: var(--gold); color: var(--ink); }
+  .select-btn {
+    background: none;
+    color: var(--on-ink-dim);
+    border: 1px solid var(--on-ink-dim);
+    padding: 10px 16px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .select-btn:hover { color: var(--paper); border-color: var(--paper); }
+  .select-btn.active { background: var(--gold-lt); color: var(--ink); border-color: var(--gold-lt); }
   #photoInput { display: none; }
   #uploadStatus {
     font-size: 0.85rem;
@@ -507,19 +592,121 @@
     margin: 0 0 14px;
   }
 
+  .gallery-selectbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: -6px 0 16px;
+    font-size: 0.85rem;
+    color: var(--on-ink-dim);
+  }
+  .gallery-selectbar[hidden] { display: none; }
+  .gallery-selectbar-btn {
+    background: var(--gold-lt);
+    color: var(--ink);
+    border: none;
+    padding: 8px 16px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+  .gallery-selectbar-btn:disabled { opacity: 0.45; cursor: default; }
+  .gallery-selectbar-btn.ghost { background: none; color: var(--on-ink-dim); border: 1px solid var(--on-ink-dim); }
+  .gallery-selectbar-btn.ghost:hover { color: var(--paper); border-color: var(--paper); }
+
   .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
     gap: 12px;
   }
   .gallery-grid:empty { display: none; }
-  .gallery-grid img {
+  .gallery-item { position: relative; }
+  .gallery-item img,
+  .gallery-item video {
+    display: block;
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
     background: var(--ink-2);
     border: 2px solid var(--paper);
+    transition: outline-color 0.15s ease, opacity 0.15s ease;
+    cursor: zoom-in;
   }
+  .gallery-item.selected img,
+  .gallery-item.selected video {
+    outline: 3px solid var(--gold-lt);
+    outline-offset: -3px;
+  }
+  .gallery.selecting .gallery-item { cursor: pointer; }
+  .gallery.selecting .gallery-item img,
+  .gallery.selecting .gallery-item video { cursor: pointer; }
+  .gallery.selecting .gallery-item:not(.selected) img,
+  .gallery.selecting .gallery-item:not(.selected) video { opacity: 0.72; }
+  .gallery-download {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(32,29,22,0.75);
+    color: var(--paper);
+    opacity: 0;
+    transition: opacity 0.15s ease, background 0.15s ease;
+  }
+  .gallery-download svg { width: 15px; height: 15px; }
+  .gallery-item:hover .gallery-download,
+  .gallery-download:focus-visible { opacity: 1; }
+  .gallery-download:hover { background: var(--red); }
+  @media (hover: none) {
+    .gallery-download { opacity: 1; }
+  }
+  .gallery.selecting .gallery-download { display: none; }
+  .gallery-select {
+    position: absolute;
+    left: 6px;
+    top: 6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(32,29,22,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+  }
+  .gallery.selecting .gallery-select { display: flex; }
+  .gallery-select input {
+    width: 19px;
+    height: 19px;
+    margin: 0;
+    accent-color: var(--gold-lt);
+    cursor: pointer;
+  }
+  .gallery-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .gallery-play span {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(32,29,22,0.62);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gallery-play svg { width: 15px; height: 15px; color: var(--paper); margin-left: 2px; }
 
   .gallery-empty {
     display: flex;
@@ -750,6 +937,87 @@
     cursor: pointer;
   }
 
+  /* the gallery preview is a plain fixed-position overlay (not a native
+     <dialog>) so its centering/backdrop can't be neutered by anything that
+     targets ::backdrop or dialog:modal specifically */
+  .gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .gallery-lightbox[hidden] { display: none; }
+  .gallery-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(23,20,15,0.94);
+  }
+  .gallery-lightbox-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 96vw;
+    max-height: 96vh;
+  }
+  .lightbox-media img,
+  .lightbox-media video {
+    display: block;
+    max-width: 96vw;
+    max-height: 78vh;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    border: 3px solid var(--paper);
+  }
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(32,29,22,0.6);
+    color: var(--paper);
+    font-size: 1.3rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .lightbox-nav:hover { background: var(--red); }
+  .lightbox-nav[hidden] { display: none; }
+  .lightbox-prev { left: -54px; }
+  .lightbox-next { right: -54px; }
+  @media (max-width: 760px) {
+    .lightbox-prev { left: 6px; }
+    .lightbox-next { right: 6px; }
+  }
+  .lightbox-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 12px;
+    color: var(--paper);
+    font-size: 0.85rem;
+  }
+  .lightbox-count { color: var(--on-ink-dim); }
+  .lightbox-download-link {
+    color: var(--gold-lt);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.82rem;
+    border: 1px solid var(--gold);
+    padding: 7px 16px;
+  }
+  .lightbox-download-link:hover { background: var(--gold); color: var(--ink); }
+
   .choice-field { border: 0; padding: 0; margin: 0 0 16px; }
   .choice-field legend {
     font-size: 0.85rem;
@@ -800,6 +1068,29 @@
     border-left: 3px solid var(--red);
   }
   .payment-note:empty { display: none; }
+  .payment-note a {
+    color: var(--red);
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+  .payment-note a:hover { color: var(--ink); }
+  .payment-note .mia-pay {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .payment-note .mia-qr-link {
+    flex-shrink: 0;
+    display: block;
+    line-height: 0;
+    border-bottom: 0;
+    border: 2px solid var(--paper);
+    background: var(--paper);
+  }
+  .payment-note .mia-qr-img { display: block; width: 84px; height: 84px; }
+  .payment-note .mia-pay-note { display: block; }
 
   .choice-other {
     margin-top: 8px;

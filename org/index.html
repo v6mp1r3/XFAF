@@ -255,6 +255,32 @@
   .breakdown-total .breakdown-label,
   .breakdown-total .breakdown-count { color: var(--brass-lt); font-weight: 700; }
 
+  /* ---------- GALLERY MODERATION ---------- */
+  .admin-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  .admin-gallery-item {
+    border: 1px solid rgba(176,143,79,0.3);
+    overflow: hidden;
+  }
+  .admin-gallery-item img,
+  .admin-gallery-item video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: var(--ink-2);
+  }
+  .admin-gallery-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+  }
+
   /* ---------- SETTINGS FORM ---------- */
   .settings-form { max-width: 720px; }
   fieldset { border: 1px solid rgba(176,143,79,0.3); padding: 18px 18px 4px; margin: 0 0 20px; }
@@ -331,6 +357,7 @@
   <div class="tabs" role="tablist">
     <button class="tab" id="tabRegs" role="tab" aria-selected="true" type="button">Registrations</button>
     <button class="tab" id="tabStats" role="tab" aria-selected="false" type="button">Statistics</button>
+    <button class="tab" id="tabGallery" role="tab" aria-selected="false" type="button">Gallery</button>
     <button class="tab" id="tabSettings" role="tab" aria-selected="false" type="button">Event settings</button>
   </div>
 
@@ -358,6 +385,16 @@
     <div class="panel-head"><h2>Statistics</h2></div>
     <div class="stat-tiles" id="statTiles"></div>
     <div class="stat-breakdowns" id="statBreakdowns"></div>
+  </section>
+
+  <section id="panelGallery" hidden>
+    <div class="panel-head">
+      <h2>Gallery</h2>
+      <button class="btn" id="galleryRefresh" type="button">Refresh</button>
+    </div>
+    <p class="count" id="galleryCount"></p>
+    <p class="error-msg" id="galleryError"></p>
+    <div class="admin-gallery-grid" id="galleryAdminGrid"></div>
   </section>
 
   <section id="panelSettings" hidden>
@@ -411,7 +448,7 @@
   const loginError = document.getElementById('loginError');
 
   if (!configured) {
-    loginError.textContent = 'This site is not connected to a Firebase project yet — nothing to sign into.';
+    loginError.textContent = 'This site is not connected to a Firebase project yet - nothing to sign into.';
     document.getElementById('loginSubmit').disabled = true;
   } else {
     firebase.initializeApp(cfg);
@@ -421,7 +458,7 @@
 
   /* ---- which edition is being managed ----------------------------
      each edition's data lives at events/{eventId}/registrations and
-     events/{eventId}/settings/event — completely separate from the
+     events/{eventId}/settings/event - completely separate from the
      other edition's, switched here rather than by URL */
   let currentEventId = 'spring-2026';
   function eventRef() { return db.collection('events').doc(currentEventId); }
@@ -441,6 +478,7 @@
         whoBox.hidden = true;
         loginView.hidden = false;
         stopRegistrationsListener();
+        stopGalleryAdminListener();
       }
     });
 
@@ -467,20 +505,26 @@
   /* ---- tabs ---- */
   const tabRegs = document.getElementById('tabRegs');
   const tabStats = document.getElementById('tabStats');
+  const tabGallery = document.getElementById('tabGallery');
   const tabSettings = document.getElementById('tabSettings');
   const panelRegs = document.getElementById('panelRegs');
   const panelStats = document.getElementById('panelStats');
+  const panelGallery = document.getElementById('panelGallery');
   const panelSettings = document.getElementById('panelSettings');
   tabRegs.addEventListener('click', function () { showTab('regs'); });
   tabStats.addEventListener('click', function () { showTab('stats'); });
+  tabGallery.addEventListener('click', function () { showTab('gallery'); });
   tabSettings.addEventListener('click', function () { showTab('settings'); });
   function showTab(name) {
     tabRegs.setAttribute('aria-selected', String(name === 'regs'));
     tabStats.setAttribute('aria-selected', String(name === 'stats'));
+    tabGallery.setAttribute('aria-selected', String(name === 'gallery'));
     tabSettings.setAttribute('aria-selected', String(name === 'settings'));
     panelRegs.hidden = name !== 'regs';
     panelStats.hidden = name !== 'stats';
+    panelGallery.hidden = name !== 'gallery';
     panelSettings.hidden = name !== 'settings';
+    if (name === 'gallery') startGalleryAdminListener();
   }
 
   /* ---- event switcher --------------------------------------------
@@ -498,6 +542,8 @@
       stopRegistrationsListener();
       startRegistrationsListener();
       loadSettingsIntoForm();
+      stopGalleryAdminListener();
+      if (!panelGallery.hidden) startGalleryAdminListener();
     });
   });
 
@@ -513,7 +559,14 @@
       renderRegistrations();
       renderStats();
     }, function (err) {
-      document.getElementById('regsError').textContent = 'Could not load registrations (' + err.code + ').';
+      // A dropped listener (rules republish, brief network loss, token
+      // refresh, ...) must not leave the dashboard permanently stale -
+      // release the guard and try again shortly, as long as we're still
+      // logged in. Registrations already saved in Firestore are never
+      // touched by this; only the live view here can go stale.
+      document.getElementById('regsError').textContent = 'Could not load registrations (' + err.code + ') - retrying…';
+      unsubRegs = null;
+      if (auth && auth.currentUser) setTimeout(startRegistrationsListener, 4000);
     });
   }
   function stopRegistrationsListener() {
@@ -522,6 +575,90 @@
     renderRegistrations();
     renderStats();
   }
+
+  /* ---- gallery moderation ------------------------------------------
+     guests upload straight from the public page (no login needed) -
+     this is where the organizer reviews and removes anything, per
+     edition. Files themselves live on Cloudinary, not Firebase - this
+     only ever touches the Firestore record of them, so "Remove" takes
+     an item off the site immediately, but the underlying file on
+     Cloudinary isn't deleted with it (that needs their Admin API, which
+     needs a secret key - not something a static site can hold safely).
+     Clear out old files from cloudinary.com's own media library
+     occasionally if that matters to you. */
+  let unsubGallery = null;
+
+  function startGalleryAdminListener() {
+    if (unsubGallery || !db) return;
+    document.getElementById('galleryError').textContent = '';
+    const galleryEventId = currentEventId;
+    unsubGallery = db.collection('events').doc(galleryEventId).collection('gallery')
+      .orderBy('createdAt', 'desc').limit(300).onSnapshot(function (snap) {
+        renderGalleryAdmin(snap, galleryEventId);
+      }, function (err) {
+        // same self-healing as the registrations listener below - a dropped
+        // listener must not leave this tab stuck showing an old gallery
+        document.getElementById('galleryError').textContent = 'Could not load the gallery (' + err.code + ') - retrying…';
+        unsubGallery = null;
+        if (auth && auth.currentUser) setTimeout(startGalleryAdminListener, 4000);
+      });
+  }
+  function stopGalleryAdminListener() {
+    if (unsubGallery) { unsubGallery(); unsubGallery = null; }
+    document.getElementById('galleryAdminGrid').innerHTML = '';
+    document.getElementById('galleryCount').textContent = '';
+  }
+
+  function renderGalleryAdmin(snap, galleryEventId) {
+    const grid = document.getElementById('galleryAdminGrid');
+    grid.innerHTML = '';
+    document.getElementById('galleryCount').textContent = snap.size + (snap.size === 1 ? ' item' : ' items');
+    if (snap.empty) {
+      const p = document.createElement('p');
+      p.className = 'breakdown-empty';
+      p.textContent = 'Nothing uploaded yet.';
+      grid.appendChild(p);
+      return;
+    }
+    const galleryRef = db.collection('events').doc(galleryEventId).collection('gallery');
+    snap.forEach(function (doc) {
+      const item = doc.data();
+      const cell = document.createElement('div');
+      cell.className = 'admin-gallery-item';
+
+      const media = item.type === 'video'
+        ? Object.assign(document.createElement('video'), { src: item.url, controls: true, preload: 'metadata' })
+        : Object.assign(document.createElement('img'), { src: item.url, alt: 'Uploaded ' + item.type, loading: 'lazy' });
+      cell.appendChild(media);
+
+      const bar = document.createElement('div');
+      bar.className = 'admin-gallery-bar';
+      const dl = document.createElement('a');
+      dl.href = item.url; dl.download = ''; dl.target = '_blank'; dl.rel = 'noopener';
+      dl.className = 'btn'; dl.textContent = 'Download';
+      const del = document.createElement('button');
+      del.type = 'button'; del.className = 'row-del'; del.textContent = 'Remove';
+      del.addEventListener('click', async function () {
+        if (!confirm('Remove this ' + item.type + " from the site? (The file stays on Cloudinary - delete it there too if you need it fully gone.)")) return;
+        del.disabled = true;
+        try {
+          await galleryRef.doc(doc.id).delete();
+        } catch (err) {
+          document.getElementById('galleryError').textContent = 'Could not remove that item (' + err.code + ').';
+          del.disabled = false;
+        }
+      });
+      bar.appendChild(dl);
+      bar.appendChild(del);
+      cell.appendChild(bar);
+      grid.appendChild(cell);
+    });
+  }
+
+  document.getElementById('galleryRefresh').addEventListener('click', function () {
+    stopGalleryAdminListener();
+    startGalleryAdminListener();
+  });
 
   function renderRegistrations() {
     // pinned once per render so a row's controls always write back to the
@@ -551,7 +688,7 @@
 
     rows.forEach(function (r) {
       const tr = document.createElement('tr');
-      const when = (r.createdAt && r.createdAt.toDate) ? r.createdAt.toDate().toLocaleString() : '—';
+      const when = (r.createdAt && r.createdAt.toDate) ? r.createdAt.toDate().toLocaleString() : '-';
       const foodText = r.food === 'other' ? ('Other: ' + (r.foodOther || '')) : (r.food || '');
       tr.innerHTML =
         '<td>' + escapeHtml(r.name) + '</td>' +
@@ -568,7 +705,7 @@
       const suggestedAmount = r.amountPaid || guessTierPrice(r);
 
       // Amount: pick one of the site's current ticket prices, or type a
-      // custom one — built first so the Paid checkbox can read its value.
+      // custom one - built first so the Paid checkbox can read its value.
       const priceOptions = getCurrentPrices();
       const amountSelect = document.createElement('select');
       amountSelect.className = 'amount-select';
@@ -674,7 +811,7 @@
   function renderStats() {
     const total = allRegs.length;
     const paidCount = allRegs.filter(function (r) { return !!r.paid; }).length;
-    // only rows actually marked Paid count toward money in hand — an
+    // only rows actually marked Paid count toward money in hand - an
     // amount left over from before someone unchecked Paid should not
     const totalCollected = allRegs.reduce(function (sum, r) { return sum + (r.paid ? (Number(r.amountPaid) || 0) : 0); }, 0);
 
@@ -715,7 +852,7 @@
       .sort(function (a, b) { return b.count - a.count; });
   }
 
-  /* groups "FAF-253" into the cohort "FAF-25X" — the first two digits
+  /* groups "FAF-253" into the cohort "FAF-25X" - the first two digits
      of the group code, the way the old spreadsheet's "Torent" column did */
   function cohortOf(group) {
     const m = String(group || '').trim().match(/^([A-Za-z]+-?)?(\d{2})/);
@@ -806,7 +943,7 @@
 
   /* ---- event settings ---- */
   // starting point for each edition until the organizer saves real
-  // settings for it — Fall's are placeholders (no eventDate at all,
+  // settings for it - Fall's are placeholders (no eventDate at all,
   // so the public page never shows a made-up countdown target)
   const EVENT_DEFAULTS = {
     'spring-2026': {
@@ -849,7 +986,7 @@
     return match ? match.price : 0;
   }
 
-  // the site's current ticket prices, for the Amount dropdown — de-duped
+  // the site's current ticket prices, for the Amount dropdown - de-duped
   // and sorted, so "Custom…" is only needed for a genuine one-off amount
   function getCurrentPrices() {
     const seen = {};
@@ -871,7 +1008,7 @@
   });
 
   /* the public page only ever shows month + day ("March 30"), so the
-     tier pickers just need a date to click — the display text and the
+     tier pickers just need a date to click - the display text and the
      "opens" label are generated from it instead of typed by hand */
   function monthDay(isoDate) {
     if (!isoDate) return '';
@@ -905,7 +1042,7 @@
 
       // the pickers need a full date; tiers are stored without a year
       // (they're assumed to fall in the event's own year), so borrow one
-      // — the event's own year if it has a date yet, else the current year
+      // - the event's own year if it has a date yet, else the current year
       const tierYear = eventDateVal ? new Date(eventDateVal).getFullYear() : new Date().getFullYear();
       const tiers = (Array.isArray(s.tiers) && s.tiers.length === 3) ? s.tiers : defaults.tiers;
       liveTiers = tiers;
@@ -947,7 +1084,7 @@
 
     const eventDateInput = getVal('setEventDate');
     const data = {
-      // an empty field saves as "" on purpose — the public page then shows
+      // an empty field saves as "" on purpose - the public page then shows
       // "date to be announced" instead of a countdown to a made-up date
       eventDate: eventDateInput ? eventDateInput + ':00' : '',
       dateLabel: getVal('setHeroDate'),

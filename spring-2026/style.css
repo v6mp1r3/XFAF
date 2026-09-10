@@ -436,6 +436,69 @@
   .about p { max-width: var(--measure); }
   .about-art { width: 100%; height: auto; display: block; }
 
+  /* ---------- ORGANISERS ---------------------------------------- */
+
+  /* flexbox rather than grid: each wrapped line centers on its own,
+     so 5 cards naturally sit 3 over 2 without an empty gap */
+  .team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 16px;
+    max-width: 640px;
+    margin: 0 auto 36px;
+  }
+  .team-card { flex: 0 1 160px; text-align: center; }
+  .team-card.plate .plate-in { padding: 22px 14px 18px; }
+  .team-photo {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: var(--stock-2);
+    border: 2px solid var(--brass);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .team-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .team-photo svg { width: 34px; height: 34px; color: var(--on-stock-dim); }
+  .team-name {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.02rem;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  /* a card can stand out a size up once it has a real photo */
+  .team-card-lg { flex: 0 1 190px; }
+  .team-card-lg .plate-in { padding: 18px 14px 18px; }
+  .team-card-lg .team-photo { width: 132px; height: 132px; border-width: 3px; }
+  .team-card-lg .team-photo svg { width: 58px; height: 58px; }
+  .team-card-lg .team-name { font-size: 1.2rem; }
+
+  .team-social {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .team-social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--brass-lt);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .team-social-link:hover { background: var(--vermilion); color: var(--stock); }
+  .team-social-link svg { width: 14px; height: 14px; }
+
   /* ---------- MEDIA PLATES ------------------------------------ */
 
   .plate-zoom {
@@ -496,6 +559,7 @@
     margin: 0;
     color: var(--stock);
   }
+  .gallery-top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .upload-btn {
     background: none;
     color: var(--brass-lt);
@@ -507,6 +571,18 @@
     cursor: pointer;
   }
   .upload-btn:hover { background: var(--brass); color: var(--ink); }
+  .select-btn {
+    background: none;
+    color: var(--on-ink-dim);
+    border: 1px solid var(--on-ink-dim);
+    padding: 10px 16px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .select-btn:hover { color: var(--stock); border-color: var(--stock); }
+  .select-btn.active { background: var(--brass-lt); color: var(--ink); border-color: var(--brass-lt); }
   #photoInput { display: none; }
   #uploadStatus {
     font-size: 0.85rem;
@@ -515,19 +591,121 @@
     margin: 0 0 14px;
   }
 
+  .gallery-selectbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: -6px 0 16px;
+    font-size: 0.85rem;
+    color: var(--on-ink-dim);
+  }
+  .gallery-selectbar[hidden] { display: none; }
+  .gallery-selectbar-btn {
+    background: var(--brass-lt);
+    color: var(--ink);
+    border: none;
+    padding: 8px 16px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+  .gallery-selectbar-btn:disabled { opacity: 0.45; cursor: default; }
+  .gallery-selectbar-btn.ghost { background: none; color: var(--on-ink-dim); border: 1px solid var(--on-ink-dim); }
+  .gallery-selectbar-btn.ghost:hover { color: var(--stock); border-color: var(--stock); }
+
   .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
     gap: 12px;
   }
   .gallery-grid:empty { display: none; }
-  .gallery-grid img {
+  .gallery-item { position: relative; }
+  .gallery-item img,
+  .gallery-item video {
+    display: block;
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
     background: var(--ink-2);
     border: 2px solid var(--stock);
+    transition: outline-color 0.15s ease, opacity 0.15s ease;
+    cursor: zoom-in;
   }
+  .gallery-item.selected img,
+  .gallery-item.selected video {
+    outline: 3px solid var(--brass-lt);
+    outline-offset: -3px;
+  }
+  .gallery.selecting .gallery-item { cursor: pointer; }
+  .gallery.selecting .gallery-item img,
+  .gallery.selecting .gallery-item video { cursor: pointer; }
+  .gallery.selecting .gallery-item:not(.selected) img,
+  .gallery.selecting .gallery-item:not(.selected) video { opacity: 0.72; }
+  .gallery-download {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(20,24,44,0.75);
+    color: var(--stock);
+    opacity: 0;
+    transition: opacity 0.15s ease, background 0.15s ease;
+  }
+  .gallery-download svg { width: 15px; height: 15px; }
+  .gallery-item:hover .gallery-download,
+  .gallery-download:focus-visible { opacity: 1; }
+  .gallery-download:hover { background: var(--vermilion); }
+  @media (hover: none) {
+    .gallery-download { opacity: 1; }
+  }
+  .gallery.selecting .gallery-download { display: none; }
+  .gallery-select {
+    position: absolute;
+    left: 6px;
+    top: 6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(20,24,44,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+  }
+  .gallery.selecting .gallery-select { display: flex; }
+  .gallery-select input {
+    width: 19px;
+    height: 19px;
+    margin: 0;
+    accent-color: var(--brass-lt);
+    cursor: pointer;
+  }
+  .gallery-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .gallery-play span {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(20,24,44,0.62);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gallery-play svg { width: 15px; height: 15px; color: var(--stock); margin-left: 2px; }
 
   /* the empty state is the invitation: blank prints waiting to be pinned up */
   .gallery-empty {
@@ -760,6 +938,87 @@
     line-height: 1;
     cursor: pointer;
   }
+
+  /* the gallery preview is a plain fixed-position overlay (not a native
+     <dialog>) so its centering/backdrop can't be neutered by anything that
+     targets ::backdrop or dialog:modal specifically */
+  .gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .gallery-lightbox[hidden] { display: none; }
+  .gallery-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(13,16,32,0.94);
+  }
+  .gallery-lightbox-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 96vw;
+    max-height: 96vh;
+  }
+  .lightbox-media img,
+  .lightbox-media video {
+    display: block;
+    max-width: 96vw;
+    max-height: 78vh;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    border: 3px solid var(--stock);
+  }
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(20,24,44,0.6);
+    color: var(--stock);
+    font-size: 1.3rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .lightbox-nav:hover { background: var(--vermilion); }
+  .lightbox-nav[hidden] { display: none; }
+  .lightbox-prev { left: -54px; }
+  .lightbox-next { right: -54px; }
+  @media (max-width: 760px) {
+    .lightbox-prev { left: 6px; }
+    .lightbox-next { right: 6px; }
+  }
+  .lightbox-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 12px;
+    color: var(--stock);
+    font-size: 0.85rem;
+  }
+  .lightbox-count { color: var(--on-ink-dim); }
+  .lightbox-download-link {
+    color: var(--brass-lt);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.82rem;
+    border: 1px solid var(--brass);
+    padding: 7px 16px;
+  }
+  .lightbox-download-link:hover { background: var(--brass); color: var(--ink); }
 
 .choice-field { border: 0; padding: 0; margin: 0 0 16px; }
 .choice-field legend {
